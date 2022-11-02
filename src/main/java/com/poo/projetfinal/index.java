@@ -2,11 +2,40 @@ package com.poo.projetfinal;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.mysql.cj.jdbc.exceptions.SQLError;
+import com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping;
+
+import java.sql.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @RestController
 public class index {
-    @GetMapping("/")
-	public String index() {
-		return "Waaaaouhh ! Super experience utilisateur la !";
+	@GetMapping("/")
+	public ModelAndView index() {
+
+		String url = "jdbc:mysql://127.0.0.1:3306";
+		String port = "3308";
+		String username = "new_user";
+		String passwd = "test";
+
+		try {
+			Connection ct = DriverManager.getConnection(url, username, passwd);
+			System.out.println("Connexion a la base de donnée établie.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		var mav = new ModelAndView("index");
+
+		mav.addObject("username", "Noemie");
+		mav.setViewName("index");
+
+		return mav;
 	}
+
 }
