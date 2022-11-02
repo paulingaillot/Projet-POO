@@ -1,7 +1,12 @@
 package com.poo.projetfinal;
 
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mysql.cj.jdbc.exceptions.SQLError;
@@ -11,7 +16,6 @@ import java.sql.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 
 @RestController
 public class index {
