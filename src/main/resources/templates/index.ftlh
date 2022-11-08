@@ -40,7 +40,7 @@
       </nav>
 
       <div class="card mb-3">
-        <img src="./banniere.png" class="card-img-top" alt="banniere.png">
+        <img src="./ressources/banniere.png" class="card-img-top" alt="./ressources/banniere.png">
         <div class="card-body">
         </div>
       </div>
