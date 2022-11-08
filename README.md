@@ -1,8 +1,7 @@
 # Instruction
 
-- Java 17 
+- Java 17
 
+## How To Run
 
-# How To Run
-
-Dans le terminal : ``./mvnw.cmd spring-boot:run`` 
+Dans le terminal : ``./mvnw.cmd spring-boot:run``

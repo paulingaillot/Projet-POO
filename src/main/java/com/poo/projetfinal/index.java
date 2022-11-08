@@ -1,8 +1,6 @@
 package com.poo.projetfinal;
 
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,10 +15,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +35,6 @@ public class index {
 	public ModelAndView Index(HttpServletRequest request) {
 
 		String url = "jdbc:mysql://127.0.0.1:3306/test";
-		String port = "3308";
 		String username = "new_user";
 		String passwd = "test";
 
@@ -93,7 +87,6 @@ public class index {
 		System.out.println(password);
 		if (nom != null && password != null) {
 			String url = "jdbc:mysql://127.0.0.1:3306/test";
-			String port = "3308";
 			String username = "new_user";
 			String passwd = "test";
 
@@ -136,7 +129,6 @@ public class index {
 		System.out.println(password);
 		if (nom != null && password != null) {
 			String url = "jdbc:mysql://127.0.0.1:3306/test";
-			String port = "3308";
 			String username = "new_user";
 			String passwd = "test";
 
