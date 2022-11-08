@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         var resolver = new FreeMarkerViewResolver();
         resolver.setCache(true);
-        resolver.setSuffix(".ftlh");
+        resolver.setSuffix(".html");
         return resolver;
     }
 
