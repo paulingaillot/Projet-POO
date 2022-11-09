@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,11 +26,16 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class index {
 
-	public Optional<String> readServletCookie(HttpServletRequest request, String name){
+	public String readServletCookie(HttpServletRequest request, String name){
+		try {
 		return Arrays.stream(request.getCookies())
 		  .filter(cookie->name.equals(cookie.getName()))
 		  .map(Cookie::getValue)
-		  .findAny();
+		  .findAny()
+		  .get();
+		}catch(NullPointerException e) {
+			return null;
+		}
 	  }
 
 	@GetMapping("/")
@@ -56,22 +63,23 @@ public class index {
 		var mav = new ModelAndView("index");
 
 		String name = "newbie";
-		if(!readServletCookie(request, "username").isEmpty()) {
-			name = readServletCookie(request, "username").get();
+		if(readServletCookie(request, "username") != null) {
+			name = readServletCookie(request, "username");
+			mav.addObject("username", name);
+			mav.addObject("message", "");
+		}else {
+			mav.addObject("username", name);
+			mav.addObject("message", "<p>Connecte-toi pour découvrir de nouvelles recettes</p>");
 		}
 
 		SimpleDateFormat s = new SimpleDateFormat("HH");
    		Date date = new Date();
     	
-		if(Integer.parseInt(s.format(date)) >= 18) {
+		if(Integer.parseInt(s.format(date)) >= 20 || Integer.parseInt(s.format(date)) < 8) {
 			mav.addObject("background", "p-3 mb-2 bg-dark text-white");
 		}else {
 			mav.addObject("background", "p-3 mb-2 bg-white text-dark");
 		}
-
-		
-		mav.addObject("username", name);
-
 		return mav;
 	}
 
