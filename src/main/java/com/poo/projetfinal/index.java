@@ -238,6 +238,7 @@ public class index {
 						userCompare(temps, temps_recette, budget, budget_recette));
 			}
 
+			@SuppressWarnings("unchecked")
 			HashMap<Recette, Integer> sorted_map = sortValues(map_unsorted);
 
 			String affichage = "";
