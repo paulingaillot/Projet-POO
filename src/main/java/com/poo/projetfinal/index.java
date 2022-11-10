@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -241,11 +242,10 @@ public class index {
 
 			String affichage = "";
 			int i = 0;
-			Set set = sorted_map.entrySet();
-			Iterator iterator = set.iterator();
+			Set<Entry<Recette, Integer>> set = sorted_map.entrySet();
+			Iterator<Entry<Recette, Integer>> iterator = set.iterator();
 			while (iterator.hasNext()) {
-				Map.Entry<Recette, Integer> map = (Map.Entry) iterator.next();
-				System.out.println("Roll no:  " + map.getKey().getNom() + "     Name:   " + map.getValue());
+				Map.Entry<Recette, Integer> map = (Map.Entry<Recette, Integer>) iterator.next();
 				i++;
 				affichage += "<tr><th>" + i + "</th><td>" + map.getKey().getNom() + "</td><td>"
 						+ map.getKey().getduree() + " min</td><td>" + map.getKey().getBudget()
@@ -261,6 +261,7 @@ public class index {
 	}
 
 	// method to sort values
+	@SuppressWarnings("all")
 	private static HashMap sortValues(HashMap map) {
 		List list = new LinkedList(map.entrySet());
 		// Custom Comparator
