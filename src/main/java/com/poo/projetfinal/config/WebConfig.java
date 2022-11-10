@@ -18,6 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         var resolver = new FreeMarkerViewResolver();
         resolver.setCache(true);
+        resolver.setContentType("text/html;charset=UTF-8");
         resolver.setSuffix(".html");
         return resolver;
     }
