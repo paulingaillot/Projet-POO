@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.poo.projetfinal.Exceptions.BadPasswordException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -70,13 +73,19 @@ public class index {
 		var mav = new ModelAndView("index");
 
 		String name = "newbie";
-		if (readServletCookie(request, "username") != null) {
+		if (readServletCookie(request, "token") != null) {
 			String mail = readServletCookie(request, "mail");
-			mav.addObject("recettes", getBestRecipes(mail));
-			mav.addObject("recommandation", "<th>Recommandation</th>");
-			name = readServletCookie(request, "username");
-			mav.addObject("username", name);
-			mav.addObject("message", "");
+			String token = readServletCookie(request, "token");
+			try {
+				User user = new User(mail, new String(Base64.getDecoder().decode(token)));
+
+				mav.addObject("recettes", getBestRecipes(mail));
+				mav.addObject("recommandation", "<th>Recommandation</th>");
+				mav.addObject("username", user.getPrenom());
+				mav.addObject("message", "");
+			} catch (BadPasswordException e) {
+
+			}
 		} else {
 			mav.addObject("recettes", getLastRecipes());
 			mav.addObject("username", name);
@@ -112,40 +121,20 @@ public class index {
 	}
 
 	@PostMapping("/SubmitConnexion")
-	public RedirectView SubmitConnexion(String nom, String password, HttpServletResponse response) {
-		System.out.println(nom);
-		System.out.println(password);
-		if (nom != null && password != null) {
-			String url = "jdbc:mysql://127.0.0.1:3306/test";
-			String username = "new_user";
-			String passwd = "test";
+	public RedirectView SubmitConnexion(String mail, String password, HttpServletResponse response) {
+		if (mail != null && password != null) {
 
-			Connection ct;
 			try {
-				ct = DriverManager.getConnection(url, username, passwd);
-				System.out.println("Connexion a la base de donnée établie.");
-
-				PreparedStatement st = ct
-						.prepareStatement("SELECT prenom, password FROM users WHERE mail='" + nom + "';");
-				ResultSet result = st.executeQuery();
-				result.next();
-				String pwd = result.getString("password");
-				String prenom = result.getString("prenom");
-				st.close();
-				if (pwd.equals(password)) {
-					// create a cookie
-					Cookie cookie = new Cookie("username", prenom);
-					Cookie cookie2 = new Cookie("mail", nom);
-					response.addCookie(cookie);
-					response.addCookie(cookie2);
-
-					return new RedirectView("/");
-				} else {
-					return new RedirectView("/connexion");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+				User user = new User(mail, password);
+				Cookie cookie = new Cookie("token", user.getEncodedPassword());
+				Cookie cookie2 = new Cookie("mail", user.getMail());
+				response.addCookie(cookie);
+				response.addCookie(cookie2);
+			} catch (BadPasswordException e) {
+				System.out.println("merde");
+				return new RedirectView("/connexion");
 			}
+			return new RedirectView("/");
 		}
 		return new RedirectView("/connexion");
 	}
@@ -169,40 +158,16 @@ public class index {
 	@PostMapping("/SubmitInscription")
 	public RedirectView SubmitInscription(String mail, String password, String confirm_password, String nom,
 			String prenom, String age, String sexe, String budget, String temps) {
-		System.out.println(nom);
-		System.out.println(password);
-		System.out.println(prenom);
-		System.out.println(mail);
-		System.out.println(confirm_password);
-		System.out.println(age);
-		System.out.println(sexe);
-		System.out.println(budget);
-		System.out.println(temps);
-
-		// mail = mail.replace("@", "at");
 
 		if (mail != null && password != null && mail != null && confirm_password != null && nom != null && age != null
 				&& sexe != null && budget != null && temps != null && password.equals(confirm_password)) {
-			String url = "jdbc:mysql://127.0.0.1:3306/test";
-			String username = "new_user";
-			String passwd = "test";
 
-			Connection ct;
-			try {
-				ct = DriverManager.getConnection(url, username, passwd);
-				System.out.println("Connexion a la base de donnée établie.");
+			String encoded_password = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes());
+			User user = new User(mail, encoded_password, nom, prenom, Integer.parseInt(age), sexe.charAt(0),
+					Integer.parseInt(budget), Integer.parseInt(temps));
 
-				Statement st = ct.createStatement();
-				st.execute(
-						"INSERT INTO `test`.`users` (`mail`,`password`, `nom`, `prenom`, `age`, `sexe`, `budget`, `temps`)VALUES('"
-								+ mail + "', '" + password + "', '" + nom + "', '" + prenom + "', "
-								+ Integer.parseInt(age) + ", '" + sexe + "', " + Integer.parseInt(budget) + ", "
-								+ Integer.parseInt(temps) + ");");
-				st.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 			return new RedirectView("/");
+
 		}
 		return new RedirectView("/Inscription");
 	}
