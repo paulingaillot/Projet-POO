@@ -13,7 +13,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
@@ -163,7 +162,7 @@ public class index {
 				&& sexe != null && budget != null && temps != null && password.equals(confirm_password)) {
 
 			String encoded_password = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes());
-			User user = new User(mail, encoded_password, nom, prenom, Integer.parseInt(age), sexe.charAt(0),
+			new User(mail, encoded_password, nom, prenom, Integer.parseInt(age), sexe.charAt(0),
 					Integer.parseInt(budget), Integer.parseInt(temps));
 
 			return new RedirectView("/");
