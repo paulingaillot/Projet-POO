@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.poo.projetfinal.Exceptions.BadUserException;
-
 public class Database {
     private String url = "jdbc:mysql://127.0.0.1:3306/test";
     private String username = "new_user";
