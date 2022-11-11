@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.poo.projetfinal.Exceptions.BadPasswordException;
+import com.poo.projetfinal.Exceptions.BadUserException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -82,7 +83,7 @@ public class index {
 				mav.addObject("recommandation", "<th>Recommandation</th>");
 				mav.addObject("username", user.getPrenom());
 				mav.addObject("message", "");
-			} catch (BadPasswordException e) {
+			} catch (BadPasswordException | BadUserException e) {
 
 			}
 		} else {
@@ -129,8 +130,9 @@ public class index {
 				Cookie cookie2 = new Cookie("mail", user.getMail());
 				response.addCookie(cookie);
 				response.addCookie(cookie2);
-			} catch (BadPasswordException e) {
-				System.out.println("merde");
+			} catch (BadPasswordException  e) {
+				return new RedirectView("/connexion");
+			} catch (BadUserException e){
 				return new RedirectView("/connexion");
 			}
 			return new RedirectView("/");

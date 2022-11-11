@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 
 import com.poo.projetfinal.Exceptions.BadPasswordException;
+import com.poo.projetfinal.Exceptions.BadUserException;
 
 public class User {
     private String mail;
@@ -27,12 +28,13 @@ public class User {
 
     }
 
-    public User(String mail, String password) throws BadPasswordException {
+    public User(String mail, String password) throws BadPasswordException, BadUserException {
         System.out.println("test 2 ");
         try {
         Database sql = new Database();
         ResultSet result = sql.userConnect(mail);
-        result.next();
+        if(!result.next()) throw new BadUserException();
+
 
         this.mail = mail;
         String encoded_password = result.getString("password");
@@ -56,6 +58,8 @@ public class User {
         }
         }catch(SQLException e) {
             e.printStackTrace();
+        }catch(BadUserException e ){
+            throw new BadUserException();
         }
     }
 
