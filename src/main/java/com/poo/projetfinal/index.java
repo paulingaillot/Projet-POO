@@ -96,28 +96,6 @@ public class index {
 			mav.addObject("background", "bg-white text-dark");
 		}
 
-		// load image
-
-		try {
-			ResultSet result = sql.getImage("1");
-			result.next();
-			Blob test = result.getBlob("image");
-			
-			
-			byte[] tab = test.getBinaryStream().readAllBytes();
-			
-			//BufferedImage img = toBufferedImage(tab);
-			//System.out.println(img.getWidth());
-
-			String response = Base64.getEncoder().encodeToString(tab);
-			mav.addObject("testimage", "<img src='data:image/png;base64," + response + "'/>");
-		} catch(SQLException e) {
-			e.printStackTrace();
-			mav.addObject("testimage", "error");
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-
 		return mav;
 	}
 
@@ -191,33 +169,27 @@ public class index {
 	}
 
 	public String getBestRecipes(String mail) {
-		String url = "jdbc:mysql://127.0.0.1:3306/test";
-		String username = "new_user";
-		String passwd = "test";
 
-		Connection ct;
 		try {
-			ct = DriverManager.getConnection(url, username, passwd);
-			System.out.println("Connexion a la base de donnée établie.");
 
-			PreparedStatement st = ct.prepareStatement("SELECT * FROM users WHERE mail='" + mail + "';");
-			ResultSet result = st.executeQuery();
+			Database sql = new Database();
+			ResultSet result = sql.getUser(mail);
 
 			result.next();
 			int temps = Integer.parseInt(result.getString("temps"));
 			int budget = Integer.parseInt(result.getString("budget"));
-			st.close();
+			sql.close();
 
-			st = ct.prepareStatement("SELECT * FROM recette ORDER BY id DESC;");
-			result = st.executeQuery();
+			result = sql.getRecettes();
 
 			HashMap<Recette, Integer> map_unsorted = new HashMap<>();
 			while (result.next()) {
 				String nom = result.getString("nom");
 				int temps_recette = Integer.parseInt(result.getString("temps"));
 				int budget_recette = Integer.parseInt(result.getString("budget"));
+				int id_recette = Integer.parseInt(result.getString("id"));
 
-				map_unsorted.put(new Recette(nom, temps_recette, budget_recette),
+				map_unsorted.put(new Recette(nom, temps_recette, budget_recette, id_recette),
 						userCompare(temps, temps_recette, budget, budget_recette));
 			}
 
@@ -231,11 +203,21 @@ public class index {
 			while (iterator.hasNext()) {
 				Map.Entry<Recette, Integer> map = (Map.Entry<Recette, Integer>) iterator.next();
 				i++;
-				affichage += "<tr><th>" + i + "</th><td>" + map.getKey().getNom() + "</td><td>"
+
+				String imagevalue = "";
+				try {
+					byte[] imagetab = sql.chargeIMG(map.getKey().getId()+"");
+					String response = Base64.getEncoder().encodeToString(imagetab);
+					imagevalue = "<img src='data:image/png;base64," + response + "' width=100px />";
+				} catch(Exception e) {
+					e.printStackTrace();
+				} 
+
+				affichage += "<tr><th>"+imagevalue+"</th><th>" + i + "</th><td>" + map.getKey().getNom() + "</td><td>"
 						+ map.getKey().getduree() + " min</td><td>" + map.getKey().getBudget()
 						+ "€</td><td>" + map.getValue() + "%</td></tr>";
 			}
-			st.close();
+			sql.close();
 
 			return affichage;
 		} catch (SQLException e) {
@@ -280,17 +262,10 @@ public class index {
 	}
 
 	public String getLastRecipes() {
-		String url = "jdbc:mysql://127.0.0.1:3306/test";
-		String username = "new_user";
-		String passwd = "test";
-
-		Connection ct;
 		try {
-			ct = DriverManager.getConnection(url, username, passwd);
-			System.out.println("Connexion a la base de donnée établie.");
+			Database sql = new Database();
 
-			PreparedStatement st = ct.prepareStatement("SELECT * FROM recette ORDER BY id DESC LIMIT 5;");
-			ResultSet result = st.executeQuery();
+			ResultSet result = sql.getRecettes();
 
 			String affichage = "";
 			int i = 0;
@@ -298,11 +273,22 @@ public class index {
 				String nom = result.getString("nom");
 				String temps = result.getString("temps");
 				String prix = result.getString("budget");
+				String id_recette = result.getString("id");
 				i++;
-				affichage += "<tr><th>" + i + "</th><td>" + nom + "</td><td>" + temps + " min</td><td>" + prix
+
+				String imagevalue = "";
+				try {
+					byte[] imagetab = sql.chargeIMG(id_recette+"");
+					String response = Base64.getEncoder().encodeToString(imagetab);
+					imagevalue = "<img src='data:image/png;base64," + response + "' width=100px />";
+				} catch(Exception e) {
+					e.printStackTrace();
+				} 
+				
+				affichage += "<tr><th>"+imagevalue+"</th><th>" + i + "</th><td>" + nom + "</td><td>" + temps + " min</td><td>" + prix
 						+ "€</td></tr>";
 			}
-			st.close();
+			sql.close();
 
 			return affichage;
 		} catch (SQLException e) {

@@ -1,5 +1,9 @@
 package com.poo.projetfinal;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,24 +21,24 @@ public class Database {
 
     public Database() {
         try {
-        ct = DriverManager.getConnection(url, username, passwd);
-        }catch(SQLException e) {
+            ct = DriverManager.getConnection(url, username, passwd);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public ResultSet userConnect(String mail) {
         try {
-         st = ct.prepareStatement("SELECT * FROM users WHERE mail='" + mail + "';");
-        ResultSet result = st.executeQuery();
+            st = ct.prepareStatement("SELECT * FROM users WHERE mail='" + mail + "';");
+            ResultSet result = st.executeQuery();
 
-        return result;
-        }catch(SQLException e) {
+            return result;
+        } catch (SQLException e) {
             return null;
         }
     }
 
-    public void close()  {
+    public void close() {
         try {
             st.close();
         } catch (SQLException e) {
@@ -43,55 +47,85 @@ public class Database {
         }
     }
 
-    public ResultSet getImage(String id) {
-        try {
-            st = ct.prepareStatement("SELECT * FROM recette WHERE id="+id+";");
-           ResultSet result = st.executeQuery();
-   
-           return result;
-           }catch(SQLException e) {
-               return null;
-           }
-    }
-
     public ResultSet getRecettes() {
         try {
-            st = ct.prepareStatement("SELECT * FROM recette;");
-           ResultSet result = st.executeQuery();
-   
-           return result;
-           }catch(SQLException e) {
-               return null;
-           }
-    }
+            st = ct.prepareStatement("SELECT * FROM recette ORDER BY id DESC;;");
+            ResultSet result = st.executeQuery();
 
-    public void addImage(String id, byte[] data) {
-        try {
-            Statement sl = ct.createStatement();
-            //System.out.println(data.length);
-            String response = Base64.getEncoder().encodeToString(data);
-            sl.execute("UPDATE `recette` SET `image`='"+response+"' WHERE `id`="+id+";");
-    
-            sl.close();
-            }catch(SQLException e) {
-                e.printStackTrace();
-            }
-    }
-
-    public void userInscription(String mail, String encoded_password, String nom, String prenom, int age, char sexe, int budget, int temps) {
-        try {
-        Statement sl = ct.createStatement();
-
-        sl.execute("INSERT INTO `test`.`users` (`mail`,`password`, `nom`, `prenom`, `age`, `sexe`, `budget`, `temps`)VALUES('"
-                        + mail + "', '" + encoded_password + "', '" + nom + "', '" + prenom + "', "
-                        + age + ", '" + sexe + "', " + budget + ", "
-                        + temps + ");");
-
-        sl.close();
-        }catch(SQLException e) {
-            e.printStackTrace();
+            return result;
+        } catch (SQLException e) {
+            return null;
         }
     }
 
+    public ResultSet getUser(String mail) {
+        try {
+            st = ct.prepareStatement("SELECT * FROM `users` WHERE `mail`='"+mail+"';");
+            ResultSet result = st.executeQuery();
+
+            return result;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public void sauveIMG(String location, String id) throws Exception {
+        File monImage = new File(location);
+        FileInputStream istreamImage = new FileInputStream(monImage);
+        try {
+            PreparedStatement ps = ct.prepareStatement("UPDATE `recette` SET `image`=? WHERE `id`=?");
+            try {
+                ps.setBinaryStream(1, istreamImage, (int) monImage.length());
+                ps.setLong(2, Integer.parseInt(id));
+                ps.executeUpdate();
+            } finally {
+                ps.close();
+            }
+        } finally {
+            istreamImage.close();
+        }
+    }
+
+    public byte[] chargeIMG(String id) throws Exception {
+
+        PreparedStatement ps = ct.prepareStatement("SELECT `image` FROM recette WHERE id=?");
+
+        try {
+            ps.setLong(1, Integer.parseInt(id));
+            ResultSet rs = ps.executeQuery();
+
+            try {
+                if (rs.next()) {
+                    InputStream istreamImage = rs.getBinaryStream("image");
+                    byte[] result = istreamImage.readAllBytes();
+                    return result;
+                }
+            } finally {
+                rs.close();
+            }
+        } finally {
+            ps.close();
+        }
+        System.out.println("error");
+        return null;
+
+    }
+
+    public void userInscription(String mail, String encoded_password, String nom, String prenom, int age, char sexe,
+            int budget, int temps) {
+        try {
+            Statement sl = ct.createStatement();
+
+            sl.execute(
+                    "INSERT INTO `test`.`users` (`mail`,`password`, `nom`, `prenom`, `age`, `sexe`, `budget`, `temps`)VALUES('"
+                            + mail + "', '" + encoded_password + "', '" + nom + "', '" + prenom + "', "
+                            + age + ", '" + sexe + "', " + budget + ", "
+                            + temps + ");");
+
+            sl.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -38,7 +38,7 @@ public class ProjetfinalApplication {
 				//System.out.println(image.getWidth());
 				byte[] tab = index.toByteArray(image, "png");
 
-				sql.addImage(id, tab);
+				sql.sauveIMG("src/main/resources/static/"+id+".png", id);
 			}
 			sql.close();
 
