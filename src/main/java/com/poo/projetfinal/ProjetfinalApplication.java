@@ -1,13 +1,7 @@
 package com.poo.projetfinal;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Arrays;
-import java.util.Base64;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,16 +22,12 @@ public class ProjetfinalApplication {
 
 
 			// On ajoute les images a la BDD
+
 			Database sql = new Database();
 			ResultSet recettes = sql.getRecettes();
 
 			while(recettes.next()) {
 				String id = recettes.getString("id");
-
-				BufferedImage image = ImageIO.read(new File("src/main/resources/static/"+id+".png"));
-				//System.out.println(image.getWidth());
-				byte[] tab = index.toByteArray(image, "png");
-
 				sql.sauveIMG("src/main/resources/static/"+id+".png", id);
 			}
 			sql.close();

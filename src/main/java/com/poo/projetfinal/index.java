@@ -12,13 +12,8 @@ import com.poo.projetfinal.Exceptions.BadUserException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -58,8 +53,6 @@ public class index {
 
 	@GetMapping("/")
 	public ModelAndView Index(HttpServletRequest request) {
-
-		Database sql = new Database();
 
 		var mav = new ModelAndView("index");
 
@@ -208,14 +201,21 @@ public class index {
 				try {
 					byte[] imagetab = sql.chargeIMG(map.getKey().getId()+"");
 					String response = Base64.getEncoder().encodeToString(imagetab);
-					imagevalue = "<img src='data:image/png;base64," + response + "' width=100px />";
+					imagevalue = "data:image/png;base64," + response + "";
 				} catch(Exception e) {
 					e.printStackTrace();
 				} 
 
-				affichage += "<tr><th>"+imagevalue+"</th><th>" + i + "</th><td>" + map.getKey().getNom() + "</td><td>"
-						+ map.getKey().getduree() + " min</td><td>" + map.getKey().getBudget()
-						+ "€</td><td>" + map.getValue() + "%</td></tr>";
+				affichage += "<div class='card text-bg-secondary' style='width: 18rem;'>"
+							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
+							+"<div class='card-body'>"
+							+"<h5 class='card-title'>#"+i+" | "+map.getKey().getNom()+"</h5>"
+							+"<p>Durée : "+map.getKey().getduree()+"min</p>"
+							+"<p>Budget : "+map.getKey().getBudget()+"€</p>"
+							+"<p>Recommandation : "+map.getValue()+"%</p>"
+							+"</div></div>";
+
+
 			}
 			sql.close();
 
