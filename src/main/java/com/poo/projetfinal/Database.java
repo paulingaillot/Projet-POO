@@ -68,7 +68,7 @@ public class Database {
     public void addImage(String id, byte[] data) {
         try {
             Statement sl = ct.createStatement();
-            System.out.println(data.length);
+            //System.out.println(data.length);
             String response = Base64.getEncoder().encodeToString(data);
             sl.execute("UPDATE `recette` SET `image`='"+response+"' WHERE `id`="+id+";");
     

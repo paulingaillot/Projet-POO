@@ -106,6 +106,9 @@ public class index {
 			
 			byte[] tab = test.getBinaryStream().readAllBytes();
 			
+			//BufferedImage img = toBufferedImage(tab);
+			//System.out.println(img.getWidth());
+
 			String response = Base64.getEncoder().encodeToString(tab);
 			mav.addObject("testimage", "<img src='data:image/png;base64," + response + "'/>");
 		} catch(SQLException e) {
