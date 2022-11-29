@@ -103,13 +103,16 @@ public class index {
 			result.next();
 			Blob test = result.getBlob("image");
 			
-			byte[] tab = test.getBytes((int)1, (int)test.length());
+			
+			byte[] tab = test.getBinaryStream().readAllBytes();
 			
 			String response = Base64.getEncoder().encodeToString(tab);
-			mav.addObject("testimage", "<img src='data:image/jpeg;base64," + response + "'/>");
+			mav.addObject("testimage", "<img src='data:image/png;base64," + response + "'/>");
 		} catch(SQLException e) {
 			e.printStackTrace();
 			mav.addObject("testimage", "error");
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 
 		return mav;
