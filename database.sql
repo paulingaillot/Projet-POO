@@ -24,5 +24,5 @@ CREATE TABLE `recette` (
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES("Pates",10,2);
-INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES("Gateau au Chocolat",45,10);
+INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES('Pates',10,2);
+INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES('Gateau au Chocolat',45,10);
