@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Base64;
 
 public class Database {
     private String url = "jdbc:mysql://127.0.0.1:3306/test";
@@ -40,6 +41,41 @@ public class Database {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public ResultSet getImage(String id) {
+        try {
+            st = ct.prepareStatement("SELECT * FROM recette WHERE id="+id+";");
+           ResultSet result = st.executeQuery();
+   
+           return result;
+           }catch(SQLException e) {
+               return null;
+           }
+    }
+
+    public ResultSet getRecettes() {
+        try {
+            st = ct.prepareStatement("SELECT * FROM recette;");
+           ResultSet result = st.executeQuery();
+   
+           return result;
+           }catch(SQLException e) {
+               return null;
+           }
+    }
+
+    public void addImage(String id, byte[] data) {
+        try {
+            Statement sl = ct.createStatement();
+            System.out.println(data.length);
+            String response = Base64.getEncoder().encodeToString(data);
+            sl.execute("UPDATE `recette` SET `image`='"+response+"' WHERE `id`="+id+";");
+    
+            sl.close();
+            }catch(SQLException e) {
+                e.printStackTrace();
+            }
     }
 
     public void userInscription(String mail, String encoded_password, String nom, String prenom, int age, char sexe, int budget, int temps) {

@@ -9,6 +9,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.poo.projetfinal.Exceptions.BadPasswordException;
 import com.poo.projetfinal.Exceptions.BadUserException;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,29 +59,13 @@ public class index {
 	@GetMapping("/")
 	public ModelAndView Index(HttpServletRequest request) {
 
-		String url = "jdbc:mysql://127.0.0.1:3306/test";
-		String username = "new_user";
-		String passwd = "test";
-
-		Connection ct;
-		try {
-			ct = DriverManager.getConnection(url, username, passwd);
-			System.out.println("Connexion a la base de donnée établie.");
-
-			PreparedStatement st = ct.prepareStatement("SELECT * FROM recette;");
-			ResultSet result = st.executeQuery();
-			while (result.next()) {
-				System.out.println(result.getString("nom"));
-			}
-			st.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		Database sql = new Database();
 
 		var mav = new ModelAndView("index");
 
 		String name = "newbie";
 		if (readServletCookie(request, "token") != null) {
+
 			String mail = readServletCookie(request, "mail");
 			String token = readServletCookie(request, "token");
 			try {
@@ -93,14 +85,33 @@ public class index {
 			mav.addObject("message", "<p>Connecte-toi pour découvrir de nouvelles recettes</p>");
 		}
 
+		// Mode sombre
+
 		SimpleDateFormat s = new SimpleDateFormat("HH");
 		Date date = new Date();
 
-		if (Integer.parseInt(s.format(date)) >= 20 || Integer.parseInt(s.format(date)) < 8) {
+		if (Integer.parseInt(s.format(date)) >= 16 || Integer.parseInt(s.format(date)) < 8) {
 			mav.addObject("background", "bg-dark text-white");
 		} else {
 			mav.addObject("background", "bg-white text-dark");
 		}
+
+		// load image
+
+		try {
+			ResultSet result = sql.getImage("1");
+			result.next();
+			Blob test = result.getBlob("image");
+			
+			byte[] tab = test.getBytes((int)1, (int)test.length());
+			
+			String response = Base64.getEncoder().encodeToString(tab);
+			mav.addObject("testimage", "<img src='data:image/jpeg;base64," + response + "'/>");
+		} catch(SQLException e) {
+			e.printStackTrace();
+			mav.addObject("testimage", "error");
+		}
+
 		return mav;
 	}
 
@@ -130,9 +141,9 @@ public class index {
 				Cookie cookie2 = new Cookie("mail", user.getMail());
 				response.addCookie(cookie);
 				response.addCookie(cookie2);
-			} catch (BadPasswordException  e) {
+			} catch (BadPasswordException e) {
 				return new RedirectView("/connexion");
-			} catch (BadUserException e){
+			} catch (BadUserException e) {
 				return new RedirectView("/connexion");
 			}
 			return new RedirectView("/");
@@ -292,6 +303,27 @@ public class index {
 			e.printStackTrace();
 		}
 		return "error";
+	}
+
+	// convert BufferedImage to byte[]
+	public static byte[] toByteArray(BufferedImage bi, String format)
+			throws IOException {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bi, format, baos);
+		byte[] bytes = baos.toByteArray();
+		return bytes;
+
+	}
+
+	// convert byte[] to BufferedImage
+	public static BufferedImage toBufferedImage(byte[] bytes)
+			throws IOException {
+
+		InputStream is = new ByteArrayInputStream(bytes);
+		BufferedImage bi = ImageIO.read(is);
+		return bi;
+
 	}
 
 }
