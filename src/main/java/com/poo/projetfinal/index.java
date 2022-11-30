@@ -65,17 +65,15 @@ public class index {
 				User user = new User(mail, new String(Base64.getDecoder().decode(token)));
 
 				mav.addObject("recettes", getBestRecipes(mail));
-				mav.addObject("recommandation", "<th>Recommandation</th>");
-				mav.addObject("username", user.getPrenom());
+				mav.addObject("username", "Bonjour "+user.getPrenom());
 				mav.addObject("message", "");
 			} catch (BadPasswordException | BadUserException e) {
 
 			}
 		} else {
 			mav.addObject("recettes", getLastRecipes());
-			mav.addObject("username", name);
-			mav.addObject("recommandation", "");
-			mav.addObject("message", "<p>Connecte-toi pour découvrir de nouvelles recettes</p>");
+			mav.addObject("username", "Bienvenue ");
+			mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
 		}
 
 		// Mode sombre
@@ -195,6 +193,12 @@ public class index {
 			Iterator<Entry<Recette, Integer>> iterator = set.iterator();
 			while (iterator.hasNext()) {
 				Map.Entry<Recette, Integer> map = (Map.Entry<Recette, Integer>) iterator.next();
+
+				if(i%3 == 0 ) {
+					if(i!= 0) affichage += "</div>";
+					affichage+= "<div class='row'>";
+				}
+
 				i++;
 
 				String imagevalue = "";
@@ -206,18 +210,21 @@ public class index {
 					e.printStackTrace();
 				} 
 
-				affichage += "<div class='card text-bg-secondary' style='width: 18rem;'>"
+
+
+				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
 							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
 							+"<div class='card-body'>"
 							+"<h5 class='card-title'>#"+i+" | "+map.getKey().getNom()+"</h5>"
-							+"<p>Durée : "+map.getKey().getduree()+"min</p>"
-							+"<p>Budget : "+map.getKey().getBudget()+"€</p>"
-							+"<p>Recommandation : "+map.getValue()+"%</p>"
-							+"</div></div>";
+							+"<p><b>Durée :</b> "+map.getKey().getduree()+"min</p>"
+							+"<p><b>Budget :</b> "+map.getKey().getBudget()+"€</p>"
+							+"<p><b>Recommandation :</b> "+map.getValue()+"%</p>"
+							+"</div></div><div class='col-sm-2'></div>";
 
 
 			}
 			sql.close();
+			affichage += "</div>";
 
 			return affichage;
 		} catch (SQLException e) {
@@ -274,20 +281,32 @@ public class index {
 				String temps = result.getString("temps");
 				String prix = result.getString("budget");
 				String id_recette = result.getString("id");
+
+				if(i%3 == 0 ) {
+					if(i!= 0) affichage += "</div>";
+					affichage+= "<div class='row'>";
+				}
+
 				i++;
 
 				String imagevalue = "";
 				try {
 					byte[] imagetab = sql.chargeIMG(id_recette+"");
 					String response = Base64.getEncoder().encodeToString(imagetab);
-					imagevalue = "<img src='data:image/png;base64," + response + "' width=100px />";
+					imagevalue = "data:image/png;base64," + response ;
 				} catch(Exception e) {
 					e.printStackTrace();
 				} 
 				
-				affichage += "<tr><th>"+imagevalue+"</th><th>" + i + "</th><td>" + nom + "</td><td>" + temps + " min</td><td>" + prix
-						+ "€</td></tr>";
+				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
+							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
+							+"<div class='card-body'>"
+							+"<h5 class='card-title'>#"+i+" | "+nom+"</h5>"
+							+"<p><b>Durée :</b> "+temps+"min</p>"
+							+"<p><b>Budget :</b> "+prix+"€</p>"
+							+"</div></div><div class='col-sm-2'></div>";
 			}
+			affichage += "</div>";
 			sql.close();
 
 			return affichage;
