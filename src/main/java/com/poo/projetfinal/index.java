@@ -33,6 +33,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.poo.projetfinal.config.SpringBootSessionController.generateUniqueID;
+
 @RestController
 public class index {
 
@@ -130,11 +132,14 @@ public class index {
 				Cookie cookie2 = new Cookie("mail", user.getMail());
 				response.addCookie(cookie);
 				response.addCookie(cookie2);
+
 			} catch (BadPasswordException  e) {
 				return new RedirectView("/connexion");
 			} catch (BadUserException e){
 				return new RedirectView("/connexion");
 			}
+			String UID = generateUniqueID("damn");
+
 			return new RedirectView("/");
 		}
 		return new RedirectView("/connexion");

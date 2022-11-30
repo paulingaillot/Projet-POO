@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+  <head>
+      <meta charset="UTF-8">
+      <title>[PRIVATE] - Debug session data</title>
+  </head>
+  <body>
+    <div>
+        <form action="/addNote" method="post">
+            <label>
+                Session attribute value
+                <input type="text" name="note"/>
+            </label>
+            <br> <input type="submit" value="Add Note"/>
+        </form>
+    </div>
+    <div>
+        <form action="/invalidate/session" method="post">
+            <input type="submit" value="Destroy Session"/>
+        </form>
+    </div>
+
+    <div>
+        <#list blocData as note>
+            <p>${note}</p>
+        <#else>
+        <h3>Votre session ne contient aucune donnée</h3>
+        </#list>
+
+    </div>
+  </body>
+</html>
