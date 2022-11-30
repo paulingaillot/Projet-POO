@@ -112,6 +112,7 @@ public class index {
 
 	@PostMapping("/SubmitConnexion")
 	public RedirectView SubmitConnexion(String mail, String password, HttpServletResponse response) {
+		String UID = "";
 		if (mail != null && password != null) {
 
 			try {
@@ -120,13 +121,15 @@ public class index {
 				Cookie cookie2 = new Cookie("mail", user.getMail());
 				response.addCookie(cookie);
 				response.addCookie(cookie2);
+				UID = generateUniqueID(user);
 			} catch (BadPasswordException e) {
 				return new RedirectView("/connexion");
 			} catch (BadUserException e) {
 				return new RedirectView("/connexion");
 			}
-			String UID = generateUniqueID("damn");
-			return new RedirectView("/");
+
+			return new RedirectView("/addNote?key=UID&note=" + UID + "&redirectPage=/");
+
 		}
 		return new RedirectView("/connexion");
 	}

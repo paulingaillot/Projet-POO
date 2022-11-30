@@ -29,7 +29,6 @@ public class User {
     }
 
     public User(String mail, String password) throws BadPasswordException, BadUserException {
-        System.out.println("test 2 ");
         try {
         Database sql = new Database();
         ResultSet result = sql.userConnect(mail);

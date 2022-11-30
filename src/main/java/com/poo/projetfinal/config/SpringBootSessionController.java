@@ -4,11 +4,15 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.poo.projetfinal.User;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,32 +21,45 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SpringBootSessionController {
 
-//    @PostMapping("/addNote")
     @RequestMapping(value = "/addNote", method = {RequestMethod.POST, RequestMethod.GET})
-    public String addNote(@RequestParam("note") String note, HttpServletRequest request) {
-        //get the notes from request session
+    public String addNote(@RequestParam("note") String note,
+                          @Nullable @RequestParam("redirectPage") String redirect ,
+                          @RequestParam("key") String sessionKey ,
+                          HttpServletRequest request) {
+        System.out.println(" defining "+ sessionKey +" : |" + note +"|");
+
         List<String> notes = (List<String>) request.getSession().getAttribute("NOTES_SESSION");
-        //check if notes is present in session or not
         if (notes == null) {
             notes = new ArrayList<>();
             // if notes object is not present in session, set notes in the request session
-            request.getSession().setAttribute("NOTES_SESSION", notes);
+            request.getSession().setAttribute(sessionKey, notes);
         }
         notes.add(note);
-        request.getSession().setAttribute("NOTES_SESSION", notes);
+        request.getSession().setAttribute(sessionKey, notes);
 
+        System.out.println("contenu de la session");
         for (String _note: notes) {
             System.out.println("item : |" + _note +"|");
         }
-        return "redirect:/debug/session";
+        return "redirect:" + redirect;
     }
 
     @GetMapping("/debug/session")
     public ModelAndView displaySession(Model model, HttpSession session) {
-        List<String> notes = (List<String>) session.getAttribute("NOTES_SESSION");
-        notes = notes!=null? notes:new ArrayList<>();
+//        List<String> notes = (List<String>) session.getAttribute("NOTES_SESSION");
+//        notes = notes!=null? notes:new ArrayList<>();
+        List<String> notes = new ArrayList<>();
+        Enumeration<String> list = session.getAttributeNames();
+
+        for (Iterator<String> it = list.asIterator(); it.hasNext(); ) {
+            String item = it.next();
+            List<String> secondItem = (List<String>) session.getAttribute(item);
+            System.out.println(item + " : " + secondItem);
+            notes.add(String.join(", " , secondItem));
+
+        }
+
         model.addAttribute("notesSession", notes);
-        System.out.println("Get method");
 
         var mav = new ModelAndView("debugsession");
         mav.addObject("blocData" , notes);
@@ -55,10 +72,10 @@ public class SpringBootSessionController {
         return "redirect:/debug/session";
     }
 
-    public static String generateUniqueID(String input) {
+    public static String generateUniqueID(User user) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            byte[] messageDigest = md.digest(input.getBytes());
+            byte[] messageDigest = md.digest((user.getPrenom()+user.getNom()).getBytes());
 
             BigInteger no = new BigInteger(1, messageDigest);
 
