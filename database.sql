@@ -21,6 +21,7 @@ CREATE TABLE `recette` (
   `nom` varchar(45) DEFAULT NULL,
   `temps` int DEFAULT NULL,
   `budget` int DEFAULT NULL,
+  `image` MEDIUMBLOB DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 

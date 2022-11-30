@@ -1,5 +1,6 @@
 package com.poo.projetfinal;
 
+import java.sql.ResultSet;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;
@@ -18,6 +19,21 @@ public class ProjetfinalApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
+
+
+			// On ajoute les images a la BDD
+
+			Database sql = new Database();
+			ResultSet recettes = sql.getRecettes();
+
+			while(recettes.next()) {
+				String id = recettes.getString("id");
+				sql.sauveIMG("src/main/resources/static/"+id+".png", id);
+			}
+			sql.close();
+
+
+			// On demarre Spring
 
 			System.out.println("Let's inspect the beans provided by Spring Boot:");
 
