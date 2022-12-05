@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 public class Database {
     private String url = "jdbc:mysql://127.0.0.1:3306/test";
     private String username = "new_user";
@@ -40,7 +41,6 @@ public class Database {
         try {
             st.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -48,6 +48,17 @@ public class Database {
     public ResultSet getRecettes() {
         try {
             st = ct.prepareStatement("SELECT * FROM recette ORDER BY id DESC;;");
+            ResultSet result = st.executeQuery();
+
+            return result;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public ResultSet getRecette(String id_recette) {
+        try {
+            st = ct.prepareStatement("SELECT * FROM recette WHERE id="+id_recette+";");
             ResultSet result = st.executeQuery();
 
             return result;

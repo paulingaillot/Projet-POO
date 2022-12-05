@@ -53,12 +53,27 @@ public class index {
 		}
 	}
 
+	@GetMapping("/recettealea")
+	public RedirectView recetteAlea(HttpServletRequest request) throws SQLException {
+		Database sql = new Database();
+
+		ResultSet recettes = sql.getRecettes();
+		int size =0;
+		while(recettes.next()) {
+			size++;
+		}
+
+
+		int alea =  1 + (int)(Math.random() * ((size - 1) + 1));
+		sql.close();
+		return new RedirectView("/recette?id_recette="+alea);
+	}
+
 	@GetMapping("/")
 	public ModelAndView Index(HttpServletRequest request) {
 
 		var mav = new ModelAndView("index");
 
-		String name = "newbie";
 		if (readServletCookie(request, "token") != null) {
 
 			String mail = readServletCookie(request, "mail");
@@ -218,14 +233,15 @@ public class index {
 
 
 
-				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
+				affichage += "<a href='./recette?id_recette="+map.getKey().getId()+"'><div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
 							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
 							+"<div class='card-body'>"
 							+"<h5 class='card-title'>#"+i+" | "+map.getKey().getNom()+"</h5>"
 							+"<p><b>Durée :</b> "+map.getKey().getduree()+"min</p>"
 							+"<p><b>Budget :</b> "+map.getKey().getBudget()+"€</p>"
 							+"<p><b>Recommandation :</b> "+map.getValue()+"%</p>"
-							+"</div></div><div class='col-sm-2'></div>";
+							+"<a href='./recette?id_recette="+map.getKey().getId()+"' class='stretched-link btn btn-dark'>Plus D'informations</a>"
+							+"</div></div><div class='col-sm-2'></div></a>";
 
 
 			}
@@ -283,6 +299,7 @@ public class index {
 			String affichage = "";
 			int i = 0;
 			while (result.next()) {
+				String id = result.getString("id");
 				String nom = result.getString("nom");
 				String temps = result.getString("temps");
 				String prix = result.getString("budget");
@@ -310,6 +327,7 @@ public class index {
 							+"<h5 class='card-title'>#"+i+" | "+nom+"</h5>"
 							+"<p><b>Durée :</b> "+temps+"min</p>"
 							+"<p><b>Budget :</b> "+prix+"€</p>"
+							+"<a href='./recette?id_recette="+id+"' class='stretched-link btn btn-dark'>Plus D'informations</a>"
 							+"</div></div><div class='col-sm-2'></div>";
 			}
 			affichage += "</div>";

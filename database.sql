@@ -22,10 +22,12 @@ CREATE TABLE `recette` (
   `temps` int DEFAULT NULL,
   `budget` int DEFAULT NULL,
   `image` MEDIUMBLOB DEFAULT NULL,
+  `ingredients` varchar(500) DEFAULT NULL,
+  `prepa` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
 
-INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES("Lasagnes",180,30);
+INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`, `ingredients`)VALUES("Lasagnes",180,30, "pate\nlait");
 INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES("Pates",10,2);
 INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES("Gateau au Chocolat",45,10);
