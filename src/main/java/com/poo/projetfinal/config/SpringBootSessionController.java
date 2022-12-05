@@ -28,6 +28,7 @@ public class SpringBootSessionController {
                           HttpServletRequest request) {
         System.out.println(" defining "+ sessionKey +" : |" + note +"|");
 
+        @SuppressWarnings("unchecked")
         List<String> notes = (List<String>) request.getSession().getAttribute("NOTES_SESSION");
         if (notes == null) {
             notes = new ArrayList<>();
@@ -53,6 +54,7 @@ public class SpringBootSessionController {
 
         for (Iterator<String> it = list.asIterator(); it.hasNext(); ) {
             String item = it.next();
+            @SuppressWarnings("unchecked")
             List<String> secondItem = (List<String>) session.getAttribute(item);
             System.out.println(item + " : " + secondItem);
             notes.add(String.join(", " , secondItem));
