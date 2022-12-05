@@ -1,6 +1,5 @@
 package com.poo.projetfinal;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,8 +36,6 @@ public class Admin {
 	@PostMapping("/SubmitRecette")
 	public ModelAndView SubmitRecette(HttpServletRequest request, String titre, int prix, int duree, @RequestParam("image") MultipartFile image, String ingredients, String prepa) {
         var mav = new ModelAndView("admin");
-
-		Database sql = new Database();
 
 		Recette recette = new Recette(titre, prix, duree, ingredients, prepa, image);
 		recette.CreateEntry();
