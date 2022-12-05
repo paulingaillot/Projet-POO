@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 public class ProjetfinalApplication {
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(ProjetfinalApplication.class, args);
 	}
 
