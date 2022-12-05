@@ -274,14 +274,18 @@ public class index {
 
 	public int userCompare(int temps_user, int temps_recette, int budget_user, int budget_recette) {
 
-		int dif = (int) Math.sqrt(Math.abs(Math.pow(temps_user, 2) - Math.pow(temps_recette, 2)))
-				+ (int) Math.sqrt(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2)));
-		System.out.println(temps_user + " / " + temps_recette);
-		System.out.println((int) Math.sqrt(Math.pow(temps_user, 2) - Math.pow(temps_recette, 2)));
-		System.out.println(budget_recette + " / " + budget_user);
-		System.out.println(Math.sqrt(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2)));
+		int dif = (int) (Math.abs(temps_recette-temps_user)*0.2)
+				+ (int) (Math.abs(budget_recette-budget_user)*0.3);
 
-		int pourcent = 100 - (int) (0.5 * dif);
+		System.out.println("-----------");
+		System.out.println(temps_user + " / " + temps_recette);
+		System.out.println((int) (0.5*Math.sqrt(Math.abs(Math.pow(temps_user, 2) - Math.pow(temps_recette, 2)))));
+		System.out.println(budget_recette + " / " + budget_user);
+		System.out.println(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2))+"");
+		System.out.println((int)(0.3*Math.sqrt(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2)))));
+		System.out.println(dif);
+
+		int pourcent = 100 - (int) ( dif);
 		if (pourcent < 0)
 			pourcent = 0;
 
