@@ -7,6 +7,9 @@
   <title>FoodLovers</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 </head>
 
 <body class="${background}">
@@ -47,6 +50,65 @@
   <div class="mb-3">
     <img src="./ressources/banniere.png" class="card-img-top" alt="./ressources/banniere.png">
     <div class="card-body">
+    </div>
+  </div>
+
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-1">
+        <h3> Inscription </h3>
+      </div>
+    </div>
+    <hr>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+
+      </div>
+      <div class="col-md-8 border p-4 px-5">
+        <form action="./SubmitRecette" method="post" enctype="multipart/form-data">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text material-symbols-outlined" id="basic-addon1">person</span>
+            <input type="text" class="form-control" name="titre" placeholder="Titre" aria-label="Nom"
+              aria-describedby="basic-addon1">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text material-symbols-outlined" id="basic-addon1">person</span>
+            <input type="text" class="form-control" name="duree" placeholder="Durée" aria-label="Prenom"
+              aria-describedby="basic-addon1">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <input type="text" class="form-control" name="prix" placeholder="Prix" aria-label="Age"
+              aria-describedby="basic-addon1">
+          </div>
+          
+          <div class="input-group mb-3">
+            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <textarea  class="form-control" name="ingredients" placeholder="Ingredients" rows="3" aria-label="Age"
+              aria-describedby="basic-addon1"></textarea>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <textarea  class="form-control" rows="3" name="prepa" placeholder="Etapes" aria-label="Age"
+              aria-describedby="basic-addon1"></textarea>
+          </div>
+
+          <div class="input-group mb-3">
+            <input  class="form-control" type="file" id="formFile" placeholder="image" name="image" aria-describedby="basic-addon1">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+      <div class="col">
+
+      </div>
     </div>
   </div>
 

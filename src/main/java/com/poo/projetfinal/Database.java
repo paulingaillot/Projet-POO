@@ -2,7 +2,9 @@ package com.poo.projetfinal;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.web.multipart.MultipartFile;
 
 public class Database {
     private String url = "jdbc:mysql://127.0.0.1:3306/test";
@@ -58,7 +61,7 @@ public class Database {
 
     public ResultSet getRecette(String id_recette) {
         try {
-            st = ct.prepareStatement("SELECT * FROM recette WHERE id="+id_recette+";");
+            st = ct.prepareStatement("SELECT * FROM recette WHERE id=" + id_recette + ";");
             ResultSet result = st.executeQuery();
 
             return result;
@@ -67,9 +70,22 @@ public class Database {
         }
     }
 
+    public int getRecetteId(String titre) {
+        try {
+            st = ct.prepareStatement("SELECT * FROM recette WHERE nom='" + titre + "';");
+            ResultSet result = st.executeQuery();
+            result.next();
+            String id = result.getString("id");
+            result.close();
+            return Integer.parseInt(id);
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
     public ResultSet getUser(String mail) {
         try {
-            st = ct.prepareStatement("SELECT * FROM `users` WHERE `mail`='"+mail+"';");
+            st = ct.prepareStatement("SELECT * FROM `users` WHERE `mail`='" + mail + "';");
             ResultSet result = st.executeQuery();
 
             return result;
@@ -133,6 +149,32 @@ public class Database {
 
             sl.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRecipe(String titre, int prix, int duree, String ingredients, String prepa, MultipartFile image) {
+        try {
+            Statement sl = ct.createStatement();
+
+            sl.execute(
+                    "INSERT INTO `test`.`recette` (`nom`,`temps`, `budget`, `ingredients`, `prepa`)VALUES('"
+                            + titre + "', " + duree + ", " + prix + ", '" + ingredients + "', '"
+                            + prepa + "');");
+
+            sl.close();
+
+            int recette_id = this.getRecetteId(titre);
+
+            File file = new File("src/main/resources/static/"+recette_id+".png");
+
+            try (OutputStream os = new FileOutputStream(file)) {
+                os.write(image.getBytes());
+            }
+
+            this.sauveIMG("src/main/resources/static/" + recette_id + ".png", recette_id+"");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

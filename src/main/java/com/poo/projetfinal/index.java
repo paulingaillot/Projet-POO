@@ -231,9 +231,7 @@ public class index {
 					e.printStackTrace();
 				} 
 
-
-
-				affichage += "<a href='./recette?id_recette="+map.getKey().getId()+"'><div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
+				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
 							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
 							+"<div class='card-body'>"
 							+"<h5 class='card-title'>#"+i+" | "+map.getKey().getNom()+"</h5>"
@@ -241,7 +239,7 @@ public class index {
 							+"<p><b>Budget :</b> "+map.getKey().getBudget()+"€</p>"
 							+"<p><b>Recommandation :</b> "+map.getValue()+"%</p>"
 							+"<a href='./recette?id_recette="+map.getKey().getId()+"' class='stretched-link btn btn-dark'>Plus D'informations</a>"
-							+"</div></div><div class='col-sm-2'></div></a>";
+							+"</div></div><div class='col-sm-2'></div>";
 
 
 			}
