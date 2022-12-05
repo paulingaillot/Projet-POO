@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -166,13 +167,14 @@ public class Database {
 
             int recette_id = this.getRecetteId(titre);
 
-            File file = new File("src/main/resources/static/"+recette_id+".png");
+            File file = new File("src/main/resources/static/tmp.png");
 
             try (OutputStream os = new FileOutputStream(file)) {
                 os.write(image.getBytes());
             }
 
-            this.sauveIMG("src/main/resources/static/" + recette_id + ".png", recette_id+"");
+            this.sauveIMG("src/main/resources/static/tmp.png", recette_id+"");
+            file.delete();
 
         } catch (Exception e) {
             e.printStackTrace();

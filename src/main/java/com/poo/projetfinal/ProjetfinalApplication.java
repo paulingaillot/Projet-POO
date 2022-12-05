@@ -25,13 +25,10 @@ public class ProjetfinalApplication {
 			// On ajoute les images a la BDD
 
 			Database sql = new Database();
-			ResultSet recettes = sql.getRecettes();
 
-			while(recettes.next()) {
-				String id = recettes.getString("id");
-				sql.sauveIMG("src/main/resources/static/"+id+".png", id);
+			for(int i=1;i<=3; i++) {
+				sql.sauveIMG("src/main/resources/static/"+i+".png", i+"");
 			}
-			sql.close();
 
 
 			// On demarre Spring
