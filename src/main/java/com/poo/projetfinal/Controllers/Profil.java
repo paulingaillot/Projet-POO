@@ -21,6 +21,7 @@ public class Profil {
 	public ModelAndView profil(HttpServletRequest request) {
 		var mav = new ModelAndView("profil");
 
+		@SuppressWarnings("unchecked")
 		List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 		// Infos Users
@@ -55,6 +56,7 @@ public class Profil {
 
 	@GetMapping("/ChangeNom")
 	public RedirectView ChangeNom(HttpServletRequest request, String nom) {
+		@SuppressWarnings("unchecked")
 		List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 		try {
@@ -69,6 +71,7 @@ public class Profil {
 
 	@GetMapping("/ChangePrenom")
 	public RedirectView ChangePrenom(HttpServletRequest request, String prenom) {
+		@SuppressWarnings("unchecked")
 		List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 		try {
@@ -83,6 +86,7 @@ public class Profil {
 
 	@GetMapping("/ChangeMail")
 	public RedirectView ChangeMail(HttpServletRequest request, String mail) {
+		@SuppressWarnings("unchecked")
 		List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 		try {
@@ -97,6 +101,7 @@ public class Profil {
 
 	@GetMapping("/ChangeBudget")
 	public RedirectView ChangeBudget(HttpServletRequest request, int budget) {
+		@SuppressWarnings("unchecked")
 		List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 		try {
@@ -111,6 +116,7 @@ public class Profil {
 
 	@GetMapping("/ChangeTemps")
 	public RedirectView ChangeTemps(HttpServletRequest request, int temps) {
+		@SuppressWarnings("unchecked")
 		List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 		try {

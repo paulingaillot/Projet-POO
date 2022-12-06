@@ -65,6 +65,7 @@ public class Index {
 		request.getSession();
 		System.out.println("- DEBUG : "+request.getSession().getAttributeNames().hasMoreElements());
 		if (request.getSession().getAttributeNames().hasMoreElements() == true) {
+			@SuppressWarnings("unchecked")
 			List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 			try {
