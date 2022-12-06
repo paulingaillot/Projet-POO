@@ -15,7 +15,7 @@ public class ProjetfinalApplication {
 		
 			// On ajoute les images a la BDD
 
-			/Database sql = new Database();
+			Database sql = new Database();
 
 			for(int i=1;i<=3; i++) {
 				sql.sauveIMG("src/main/resources/static/"+i+".png", i+"");
