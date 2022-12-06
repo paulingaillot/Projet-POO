@@ -74,6 +74,9 @@ public class index {
 
 		var mav = new ModelAndView("index");
 
+		request.getSession().getAttribute("UID");
+		
+
 		if (readServletCookie(request, "token") != null) {
 
 			String mail = readServletCookie(request, "mail");
@@ -114,7 +117,7 @@ public class index {
 		SimpleDateFormat s = new SimpleDateFormat("HH");
 		Date date = new Date();
 
-		if (Integer.parseInt(s.format(date)) >= 20 || Integer.parseInt(s.format(date)) < 8) {
+		if (Integer.parseInt(s.format(date)) >= 16 || Integer.parseInt(s.format(date)) < 8) {
 			mav.addObject("background", "bg-dark text-white");
 		} else {
 			mav.addObject("background", "bg-white text-dark");

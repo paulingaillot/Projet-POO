@@ -1,6 +1,5 @@
 package com.poo.projetfinal;
 
-import java.sql.ResultSet;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;
