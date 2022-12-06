@@ -1,4 +1,4 @@
-package com.poo.projetfinal.config;
+package com.poo.projetfinal.Config;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -26,6 +26,7 @@ public class SpringBootSessionController {
                           @Nullable @RequestParam("redirectPage") String redirect ,
                           @RequestParam("key") String sessionKey ,
                           HttpServletRequest request) {
+                            
         System.out.println(" defining "+ sessionKey +" : |" + note +"|");
 
         @SuppressWarnings("unchecked")

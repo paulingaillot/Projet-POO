@@ -1,4 +1,4 @@
-package com.poo.projetfinal.config;
+package com.poo.projetfinal.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

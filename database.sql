@@ -13,6 +13,7 @@ CREATE TABLE `users` (
   `sexe` varchar(1) DEFAULT NULL,
   `budget` int DEFAULT NULL,
   `temps` int DEFAULT NULL,
+  `token` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`mail`)
 );
 

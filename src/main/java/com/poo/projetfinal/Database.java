@@ -29,6 +29,8 @@ public class Database {
         }
     }
 
+    // User
+
     public ResultSet userConnect(String mail) {
         try {
             st = ct.prepareStatement("SELECT * FROM users WHERE mail='" + mail + "';");
@@ -40,6 +42,52 @@ public class Database {
         }
     }
 
+    public ResultSet getUserByToken(String token) {
+        try {
+            st = ct.prepareStatement("SELECT * FROM users WHERE token='" + token + "';");
+            ResultSet result = st.executeQuery();
+
+            return result;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public void updateUID(String mail, String UID) {
+        try {
+            PreparedStatement ps = ct.prepareStatement("UPDATE `users` SET `token`=? WHERE `mail`=?");
+            try {
+                ps.setString(1, UID);
+                ps.setString(2, mail);
+                ps.executeUpdate();
+            } finally {
+                ps.close();
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void updateUser(String UID, String nom, String prenom, String mail, int budget, int temps) {
+        try {
+            System.out.println("TOKEN DEBUGGG : "+UID);
+            PreparedStatement ps = ct.prepareStatement("UPDATE `users` SET `nom`=?, `prenom`=?, `mail`=?, `budget`=?, `temps`=? WHERE `token`=?");
+            try {
+                ps.setString(1, nom);
+                ps.setString(2, prenom);
+                ps.setString(3, mail);
+                ps.setInt(4, budget);
+                ps.setInt(5, temps);
+                ps.setString(6, UID);
+                ps.executeUpdate();
+            } finally {
+                ps.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void close() {
         try {
             st.close();
@@ -47,6 +95,8 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    // Recette
 
     public ResultSet getRecettes() {
         try {
@@ -172,7 +222,7 @@ public class Database {
                 os.write(image.getBytes());
             }
 
-            this.sauveIMG("src/main/resources/static/tmp.png", recette_id+"");
+            this.sauveIMG("src/main/resources/static/tmp.png", recette_id + "");
             file.delete();
 
         } catch (Exception e) {

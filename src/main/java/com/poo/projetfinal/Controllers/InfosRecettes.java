@@ -1,4 +1,4 @@
-package com.poo.projetfinal;
+package com.poo.projetfinal.Controllers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.poo.projetfinal.Database;
+
 @RestController
-public class infosRecettes {
+public class InfosRecettes {
 
     @GetMapping("/recette")
     public ModelAndView Index(HttpServletRequest request, int id_recette) throws SQLException {

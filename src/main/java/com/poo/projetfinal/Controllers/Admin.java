@@ -1,4 +1,4 @@
-package com.poo.projetfinal;
+package com.poo.projetfinal.Controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.poo.projetfinal.Recette;
 
 @RestController
 public class Admin {

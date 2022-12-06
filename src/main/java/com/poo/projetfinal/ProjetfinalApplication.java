@@ -11,11 +11,13 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class ProjetfinalApplication {
 
+	public static Database sql;
+
 	public static void main(String[] args) throws Exception {
 		
 			// On ajoute les images a la BDD
 
-			Database sql = new Database();
+			sql = new Database();
 
 			for(int i=1;i<=3; i++) {
 				sql.sauveIMG("src/main/resources/static/"+i+".png", i+"");

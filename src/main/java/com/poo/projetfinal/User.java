@@ -20,6 +20,8 @@ public class User {
     private int temps;
     private int budget;
 
+    private String UID;
+
     public User(String mail, String password, String prenom, String nom, int age, char sexe, int temps, int budget) {
         System.out.println("test 1 ");
         Database sql = new Database();
@@ -59,6 +61,34 @@ public class User {
             e.printStackTrace();
         }catch(BadUserException e ){
             throw new BadUserException();
+        }
+    }
+
+    public User(String token) throws BadUserException {
+        try {
+        ResultSet result = ProjetfinalApplication.sql.getUserByToken(token);
+        if(!result.next()) throw new BadUserException();
+
+        this.mail = result.getString("mail");
+        String encoded_password = result.getString("password");
+        String decoded_password = new String(Base64.getDecoder().decode(encoded_password));
+      
+
+        this.UID = token;
+        this.password  = decoded_password;
+
+        this.prenom = result.getString("prenom");
+        this.nom = result.getString("nom");
+
+        this.age = Integer.parseInt(result.getString("age"));
+        this.sexe = result.getString("sexe").charAt(0);
+
+        this.temps = Integer.parseInt(result.getString("temps"));
+        this.budget = Integer.parseInt(result.getString("budget"));
+
+        ProjetfinalApplication.sql.close();
+        }catch(Exception e) {
+
         }
     }
 
@@ -120,6 +150,14 @@ public class User {
 
     public String getEncodedPassword() {
         return Base64.getEncoder().encodeToString(this.password.getBytes());
+    }
+
+    public void saveUID(String UID) {
+        ProjetfinalApplication.sql.updateUID(this.mail, UID);
+    }
+
+    public void updateDatabase() {
+        ProjetfinalApplication.sql.updateUser(this.UID, this.nom, this.prenom, this.mail, this.budget, this.temps);
     }
 
 }

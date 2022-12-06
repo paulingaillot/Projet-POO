@@ -1,4 +1,4 @@
-package com.poo.projetfinal;
+package com.poo.projetfinal.Controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -6,8 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.poo.projetfinal.Database;
+import com.poo.projetfinal.Recette;
+import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadPasswordException;
 import com.poo.projetfinal.Exceptions.BadUserException;
+
+import static com.poo.projetfinal.Config.SpringBootSessionController.generateUniqueID;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -36,10 +41,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.poo.projetfinal.config.SpringBootSessionController.generateUniqueID;
-
 @RestController
-public class index {
+public class Index {
 
 	public String readServletCookie(HttpServletRequest request, String name) {
 		try {
@@ -53,42 +56,27 @@ public class index {
 		}
 	}
 
-	@GetMapping("/recettealea")
-	public RedirectView recetteAlea(HttpServletRequest request) throws SQLException {
-		Database sql = new Database();
-
-		ResultSet recettes = sql.getRecettes();
-		int size =0;
-		while(recettes.next()) {
-			size++;
-		}
-
-
-		int alea =  1 + (int)(Math.random() * ((size - 1) + 1));
-		sql.close();
-		return new RedirectView("/recette?id_recette="+alea);
-	}
-
 	@GetMapping("/")
-	public ModelAndView Index(HttpServletRequest request) {
+	public ModelAndView IndexPage(HttpServletRequest request) {
 
 		var mav = new ModelAndView("index");
 
-		//request.getSession().getAttribute("UID");
-		
+		// request.getSession().getAttribute("UID");
+		request.getSession();
+		System.out.println("- DEBUG : "+request.getSession().getAttributeNames().hasMoreElements());
+		if (request.getSession().getAttributeNames().hasMoreElements() == true) {
+			List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
-		if (readServletCookie(request, "token") != null) {
-
-			String mail = readServletCookie(request, "mail");
-			String token = readServletCookie(request, "token");
 			try {
-				User user = new User(mail, new String(Base64.getDecoder().decode(token)));
+				User user = new User(token.get(0));
 
-				mav.addObject("recettes", getBestRecipes(mail));
-				mav.addObject("username", "Bonjour "+user.getPrenom());
+				mav.addObject("recettes", getBestRecipes(user.getMail()));
+				mav.addObject("username", "Bonjour " + user.getPrenom());
 				mav.addObject("message", "");
-			} catch (BadPasswordException | BadUserException e) {
-
+			} catch (BadUserException e) {
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
 		} else {
 			mav.addObject("recettes", getLastRecipes());
@@ -133,19 +121,14 @@ public class index {
 
 			try {
 				User user = new User(mail, password);
-				Cookie cookie = new Cookie("token", user.getEncodedPassword());
-				Cookie cookie2 = new Cookie("mail", user.getMail());
-				response.addCookie(cookie);
-				response.addCookie(cookie2);
 				UID = generateUniqueID(user);
+				user.saveUID(UID);
 			} catch (BadPasswordException e) {
 				return new RedirectView("/connexion");
 			} catch (BadUserException e) {
 				return new RedirectView("/connexion");
 			}
-
 			return new RedirectView("/addNote?key=UID&note=" + UID + "&redirectPage=/");
-
 		}
 		return new RedirectView("/connexion");
 	}
@@ -183,6 +166,21 @@ public class index {
 		return new RedirectView("/Inscription");
 	}
 
+	@GetMapping("/recettealea")
+	public RedirectView recetteAlea(HttpServletRequest request) throws SQLException {
+		Database sql = new Database();
+
+		ResultSet recettes = sql.getRecettes();
+		int size = 0;
+		while (recettes.next()) {
+			size++;
+		}
+
+		int alea = 1 + (int) (Math.random() * ((size - 1) + 1));
+		sql.close();
+		return new RedirectView("/recette?id_recette=" + alea);
+	}
+
 	public String getBestRecipes(String mail) {
 
 		try {
@@ -218,32 +216,33 @@ public class index {
 			while (iterator.hasNext()) {
 				Map.Entry<Recette, Integer> map = (Map.Entry<Recette, Integer>) iterator.next();
 
-				if(i%3 == 0 ) {
-					if(i!= 0) affichage += "</div>";
-					affichage+= "<div class='row'>";
+				if (i % 3 == 0) {
+					if (i != 0)
+						affichage += "</div>";
+					affichage += "<div class='row'>";
 				}
 
 				i++;
 
 				String imagevalue = "";
 				try {
-					byte[] imagetab = sql.chargeIMG(map.getKey().getId()+"");
+					byte[] imagetab = sql.chargeIMG(map.getKey().getId() + "");
 					String response = Base64.getEncoder().encodeToString(imagetab);
 					imagevalue = "data:image/png;base64," + response + "";
-				} catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
-				} 
+				}
 
 				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
-							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
-							+"<div class='card-body'>"
-							+"<h5 class='card-title'>#"+i+" | "+map.getKey().getNom()+"</h5>"
-							+"<p><b>Durée :</b> "+map.getKey().getduree()+"min</p>"
-							+"<p><b>Budget :</b> "+map.getKey().getBudget()+"€</p>"
-							+"<p><b>Recommandation :</b> "+map.getValue()+"%</p>"
-							+"<a href='./recette?id_recette="+map.getKey().getId()+"' class='stretched-link btn btn-dark'>Plus D'informations</a>"
-							+"</div></div><div class='col-sm-2'></div>";
-
+						+ "<img src='" + imagevalue + "' class='card-img-top' alt='img' width=100px >"
+						+ "<div class='card-body'>"
+						+ "<h5 class='card-title'>#" + i + " | " + map.getKey().getNom() + "</h5>"
+						+ "<p><b>Durée :</b> " + map.getKey().getduree() + "min</p>"
+						+ "<p><b>Budget :</b> " + map.getKey().getBudget() + "€</p>"
+						+ "<p><b>Recommandation :</b> " + map.getValue() + "%</p>"
+						+ "<a href='./recette?id_recette=" + map.getKey().getId()
+						+ "' class='stretched-link btn btn-dark'>Plus D'informations</a>"
+						+ "</div></div><div class='col-sm-2'></div>";
 
 			}
 			sql.close();
@@ -277,18 +276,18 @@ public class index {
 
 	public int userCompare(int temps_user, int temps_recette, int budget_user, int budget_recette) {
 
-		int dif = (int) (Math.abs(temps_recette-temps_user)*0.2)
-				+ (int) (Math.abs(budget_recette-budget_user)*0.3);
+		int dif = (int) (Math.abs(temps_recette - temps_user) * 0.2)
+				+ (int) (Math.abs(budget_recette - budget_user) * 0.3);
 
 		System.out.println("-----------");
 		System.out.println(temps_user + " / " + temps_recette);
-		System.out.println((int) (0.5*Math.sqrt(Math.abs(Math.pow(temps_user, 2) - Math.pow(temps_recette, 2)))));
+		System.out.println((int) (0.5 * Math.sqrt(Math.abs(Math.pow(temps_user, 2) - Math.pow(temps_recette, 2)))));
 		System.out.println(budget_recette + " / " + budget_user);
-		System.out.println(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2))+"");
-		System.out.println((int)(0.3*Math.sqrt(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2)))));
+		System.out.println(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2)) + "");
+		System.out.println((int) (0.3 * Math.sqrt(Math.abs(Math.pow(budget_recette, 2) - Math.pow(budget_user, 2)))));
 		System.out.println(dif);
 
-		int pourcent = 100 - (int) ( dif);
+		int pourcent = 100 - (int) (dif);
 		if (pourcent < 0)
 			pourcent = 0;
 
@@ -310,30 +309,32 @@ public class index {
 				String prix = result.getString("budget");
 				String id_recette = result.getString("id");
 
-				if(i%3 == 0 ) {
-					if(i!= 0) affichage += "</div>";
-					affichage+= "<div class='row'>";
+				if (i % 3 == 0) {
+					if (i != 0)
+						affichage += "</div>";
+					affichage += "<div class='row'>";
 				}
 
 				i++;
 
 				String imagevalue = "";
 				try {
-					byte[] imagetab = sql.chargeIMG(id_recette+"");
+					byte[] imagetab = sql.chargeIMG(id_recette + "");
 					String response = Base64.getEncoder().encodeToString(imagetab);
-					imagevalue = "data:image/png;base64," + response ;
-				} catch(Exception e) {
+					imagevalue = "data:image/png;base64," + response;
+				} catch (Exception e) {
 					e.printStackTrace();
-				} 
-				
+				}
+
 				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
-							+"<img src='"+imagevalue+"' class='card-img-top' alt='img' width=100px >"
-							+"<div class='card-body'>"
-							+"<h5 class='card-title'>#"+i+" | "+nom+"</h5>"
-							+"<p><b>Durée :</b> "+temps+"min</p>"
-							+"<p><b>Budget :</b> "+prix+"€</p>"
-							+"<a href='./recette?id_recette="+id+"' class='stretched-link btn btn-dark'>Plus D'informations</a>"
-							+"</div></div><div class='col-sm-2'></div>";
+						+ "<img src='" + imagevalue + "' class='card-img-top' alt='img' width=100px >"
+						+ "<div class='card-body'>"
+						+ "<h5 class='card-title'>#" + i + " | " + nom + "</h5>"
+						+ "<p><b>Durée :</b> " + temps + "min</p>"
+						+ "<p><b>Budget :</b> " + prix + "€</p>"
+						+ "<a href='./recette?id_recette=" + id
+						+ "' class='stretched-link btn btn-dark'>Plus D'informations</a>"
+						+ "</div></div><div class='col-sm-2'></div>";
 			}
 			affichage += "</div>";
 			sql.close();
