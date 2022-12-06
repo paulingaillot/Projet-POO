@@ -48,7 +48,7 @@ public class index {
 					.map(Cookie::getValue)
 					.findAny()
 					.get();
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -74,7 +74,7 @@ public class index {
 
 		var mav = new ModelAndView("index");
 
-		request.getSession().getAttribute("UID");
+		//request.getSession().getAttribute("UID");
 		
 
 		if (readServletCookie(request, "token") != null) {
