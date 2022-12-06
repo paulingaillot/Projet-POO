@@ -11,26 +11,25 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class ProjetfinalApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
+			// On ajoute les images a la BDD
+
+			/Database sql = new Database();
+
+			for(int i=1;i<=3; i++) {
+				sql.sauveIMG("src/main/resources/static/"+i+".png", i+"");
+			}
+
+			// On demarre Spring
+
 		SpringApplication.run(ProjetfinalApplication.class, args);
 	}
 
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
-
-
-			// On ajoute les images a la BDD
-
-			Database sql = new Database();
-
-			for(int i=1;i<=3; i++) {
-				sql.sauveIMG("src/main/resources/static/"+i+".png", i+"");
-			}
-
-
-			// On demarre Spring
+			
 
 			System.out.println("Let's inspect the beans provided by Spring Boot:");
 
