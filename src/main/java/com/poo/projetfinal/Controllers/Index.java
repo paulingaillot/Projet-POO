@@ -6,13 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.poo.projetfinal.Database;
+import com.poo.projetfinal.ProjetfinalApplication;
 import com.poo.projetfinal.Recette;
 import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadPasswordException;
 import com.poo.projetfinal.Exceptions.BadUserException;
-
-import static com.poo.projetfinal.Config.SpringBootSessionController.generateUniqueID;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -22,7 +20,6 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,38 +34,24 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class Index {
 
-	public String readServletCookie(HttpServletRequest request, String name) {
-		try {
-			return Arrays.stream(request.getCookies())
-					.filter(cookie -> name.equals(cookie.getName()))
-					.map(Cookie::getValue)
-					.findAny()
-					.get();
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
 	@GetMapping("/")
 	public ModelAndView IndexPage(HttpServletRequest request) {
 
 		var mav = new ModelAndView("index");
 
-		// request.getSession().getAttribute("UID");
-		request.getSession();
 		System.out.println("- DEBUG : "+request.getSession().getAttributeNames().hasMoreElements());
 		if (request.getSession().getAttributeNames().hasMoreElements() == true) {
 			@SuppressWarnings("unchecked")
 			List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 			try {
+				System.out.print("Token : "+token.get(0));
 				User user = new User(token.get(0));
 
 				mav.addObject("recettes", getBestRecipes(user.getMail()));
@@ -122,8 +105,7 @@ public class Index {
 
 			try {
 				User user = new User(mail, password);
-				UID = generateUniqueID(user);
-				user.saveUID(UID);
+				UID = user.generateUniqueID();
 			} catch (BadPasswordException e) {
 				return new RedirectView("/connexion");
 			} catch (BadUserException e) {
@@ -169,16 +151,15 @@ public class Index {
 
 	@GetMapping("/recettealea")
 	public RedirectView recetteAlea(HttpServletRequest request) throws SQLException {
-		Database sql = new Database();
 
-		ResultSet recettes = sql.getRecettes();
+		ResultSet recettes = ProjetfinalApplication.sql.getRecettes();
 		int size = 0;
 		while (recettes.next()) {
 			size++;
 		}
 
 		int alea = 1 + (int) (Math.random() * ((size - 1) + 1));
-		sql.close();
+		ProjetfinalApplication.sql.close();
 		return new RedirectView("/recette?id_recette=" + alea);
 	}
 
@@ -186,15 +167,14 @@ public class Index {
 
 		try {
 
-			Database sql = new Database();
-			ResultSet result = sql.getUser(mail);
+			ResultSet result = ProjetfinalApplication.sql.getUser(mail);
 
 			result.next();
 			int temps = Integer.parseInt(result.getString("temps"));
 			int budget = Integer.parseInt(result.getString("budget"));
-			sql.close();
+			ProjetfinalApplication.sql.close();
 
-			result = sql.getRecettes();
+			result = ProjetfinalApplication.sql.getRecettes();
 
 			HashMap<Recette, Integer> map_unsorted = new HashMap<>();
 			while (result.next()) {
@@ -227,7 +207,7 @@ public class Index {
 
 				String imagevalue = "";
 				try {
-					byte[] imagetab = sql.chargeIMG(map.getKey().getId() + "");
+					byte[] imagetab = ProjetfinalApplication.sql.chargeIMG(map.getKey().getId() + "");
 					String response = Base64.getEncoder().encodeToString(imagetab);
 					imagevalue = "data:image/png;base64," + response + "";
 				} catch (Exception e) {
@@ -246,7 +226,7 @@ public class Index {
 						+ "</div></div><div class='col-sm-2'></div>";
 
 			}
-			sql.close();
+			ProjetfinalApplication.sql.close();
 			affichage += "</div>";
 
 			return affichage;
@@ -297,9 +277,8 @@ public class Index {
 
 	public String getLastRecipes() {
 		try {
-			Database sql = new Database();
 
-			ResultSet result = sql.getRecettes();
+			ResultSet result = ProjetfinalApplication.sql.getRecettes();
 
 			String affichage = "";
 			int i = 0;
@@ -320,7 +299,7 @@ public class Index {
 
 				String imagevalue = "";
 				try {
-					byte[] imagetab = sql.chargeIMG(id_recette + "");
+					byte[] imagetab = ProjetfinalApplication.sql.chargeIMG(id_recette + "");
 					String response = Base64.getEncoder().encodeToString(imagetab);
 					imagevalue = "data:image/png;base64," + response;
 				} catch (Exception e) {
@@ -338,7 +317,7 @@ public class Index {
 						+ "</div></div><div class='col-sm-2'></div>";
 			}
 			affichage += "</div>";
-			sql.close();
+			ProjetfinalApplication.sql.close();
 
 			return affichage;
 		} catch (SQLException e) {

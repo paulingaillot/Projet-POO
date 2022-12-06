@@ -1,8 +1,5 @@
 package com.poo.projetfinal.Config;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -11,7 +8,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.poo.projetfinal.User;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,24 +69,6 @@ public class SpringBootSessionController {
     public String destroySession(HttpServletRequest request) {
         request.getSession().invalidate();
         return "redirect:/debug/session";
-    }
-
-    public static String generateUniqueID(User user) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            byte[] messageDigest = md.digest((user.getPrenom()+user.getNom()).getBytes());
-
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            StringBuilder hashtext = new StringBuilder(no.toString(16));
-            while (hashtext.length() < 32) {
-                hashtext.insert(0, "0");
-            }
-            return hashtext.toString();
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

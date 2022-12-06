@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.poo.projetfinal.Database;
+import com.poo.projetfinal.ProjetfinalApplication;
 
 @RestController
 public class InfosRecettes {
@@ -20,15 +20,14 @@ public class InfosRecettes {
     @GetMapping("/recette")
     public ModelAndView Index(HttpServletRequest request, int id_recette) throws SQLException {
 
-        Database sql = new Database();
-        ResultSet recette = sql.getRecette("" + id_recette);
+        ResultSet recette = ProjetfinalApplication.sql.getRecette("" + id_recette);
         recette.next();
 
         var mav = new ModelAndView("recette");
 
         String imagevalue = "";
         try {
-            byte[] imagetab = sql.chargeIMG(id_recette + "");
+            byte[] imagetab = ProjetfinalApplication.sql.chargeIMG(id_recette + "");
             String response = Base64.getEncoder().encodeToString(imagetab);
             imagevalue = "<img width=100% src='data:image/png;base64," + response + "'></img>";
         } catch (Exception e) {
@@ -67,7 +66,7 @@ public class InfosRecettes {
 
         mav.addObject("recette_prepa", result);
 
-        sql.close();
+        ProjetfinalApplication.sql.close();
 
         // Mode sombre
 
