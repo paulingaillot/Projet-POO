@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.poo.projetfinal.ProjetfinalApplication;
 import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadUserException;
 
@@ -39,6 +40,13 @@ public class Profil {
 		} catch (BadUserException e) {
 			e.printStackTrace();
 		}
+
+		// Pattern
+
+		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
+
 		// Mode sombre
 
 		SimpleDateFormat s = new SimpleDateFormat("HH");
@@ -52,7 +60,6 @@ public class Profil {
 
 		return mav;
 	}
-
 
 	@GetMapping("/ChangeNom")
 	public RedirectView ChangeNom(HttpServletRequest request, String nom) {

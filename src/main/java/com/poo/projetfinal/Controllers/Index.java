@@ -68,6 +68,12 @@ public class Index {
 			mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
 		}
 
+		// Pattern
+
+		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
+
 		// Mode sombre
 
 		SimpleDateFormat s = new SimpleDateFormat("HH");
@@ -85,6 +91,14 @@ public class Index {
 	@GetMapping("/connexion")
 	public ModelAndView Connexion() {
 		var mav = new ModelAndView("connexion");
+
+		// Pattern
+
+		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
+
+		// Mode Sombre
 
 		SimpleDateFormat s = new SimpleDateFormat("HH");
 		Date date = new Date();
@@ -119,6 +133,14 @@ public class Index {
 	@GetMapping("/inscription")
 	public ModelAndView Inscription() {
 		var mav = new ModelAndView("inscription");
+
+		// Pattern
+
+		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
+
+		// Mode Sombre
 
 		SimpleDateFormat s = new SimpleDateFormat("HH");
 		Date date = new Date();

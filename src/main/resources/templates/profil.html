@@ -1,54 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FoodLovers</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
+${head}
 
 <body class="${background}">
 
-  <nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">FoodLovers</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="./">Accueil</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./recettealea">Recette Alea</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Recettes</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              User
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="./connexion">Connexion</a></li>
-              <li><a class="dropdown-item" href="./inscription">Inscription</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <br>
-  <div class="mb-3">
-    <img src="./ressources/banniere.png" class="card-img-top" alt="./ressources/banniere.png">
-    <div class="card-body">
-    </div>
-  </div>
+  ${header}
 
   <div class="container text-center">
     <div class="row">
@@ -65,10 +22,10 @@
         <form action="./ChangeNom" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">Nom</span>
+            <span class="input-group-text" id="basic-addon1">Nom</span>
             <input type="text" class="form-control" name="nom" placeholder="${nom}" aria-label="Nom"
               aria-describedby="basic-addon1">
-              <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
         </form>
@@ -81,10 +38,10 @@
         <form action="./ChangePrenom" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">Prenom</span>
+            <span class="input-group-text" id="basic-addon1">Prenom</span>
             <input type="text" class="form-control" name="prenom" placeholder="${prenom}" aria-label="Nom"
               aria-describedby="basic-addon1">
-              <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
         </form>
@@ -97,10 +54,10 @@
         <form action="./ChangeMail" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">e-mail</span>
+            <span class="input-group-text " id="basic-addon1">e-mail</span>
             <input type="text" class="form-control" name="mail" placeholder="${mail}" aria-label="Nom"
               aria-describedby="basic-addon1">
-              <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
         </form>
@@ -113,10 +70,10 @@
         <form action="./ChangeBudget" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">Budget</span>
+            <span class="input-group-text" id="basic-addon1">Budget</span>
             <input type="text" class="form-control" name="budget" placeholder="${budget}" aria-label="Nom"
               aria-describedby="basic-addon1">
-              <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
         </form>
@@ -129,10 +86,10 @@
         <form action="./ChangeTemps" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">Temps</span>
+            <span class="input-group-text" id="basic-addon1">Temps</span>
             <input type="text" class="form-control" name="temps" placeholder="${temps}" aria-label="Nom"
               aria-describedby="basic-addon1">
-              <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
         </form>
@@ -141,9 +98,7 @@
   </div>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script>
+  ${footer}
 </body>
 
 </html>

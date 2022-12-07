@@ -12,18 +12,23 @@ import org.springframework.context.annotation.Bean;
 public class ProjetfinalApplication {
 
 	public static Database sql;
+	public static WebSitePattern pattern;
 
 	public static void main(String[] args) throws Exception {
-		
-			// On ajoute les images a la BDD
 
-			sql = new Database();
+		// Construction de la classe contenant le pattern du site web
 
-			for(int i=1;i<=3; i++) {
-				sql.sauveIMG("src/main/resources/static/"+i+".png", i+"");
-			}
+		pattern = new WebSitePattern();
 
-			// On demarre Spring
+		// On ajoute les images a la BDD
+
+		sql = new Database();
+
+		for (int i = 1; i <= 3; i++) {
+			sql.sauveIMG("src/main/resources/static/" + i + ".png", i + "");
+		}
+
+		// On demarre Spring
 
 		SpringApplication.run(ProjetfinalApplication.class, args);
 	}
@@ -31,7 +36,6 @@ public class ProjetfinalApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
-			
 
 			System.out.println("Let's inspect the beans provided by Spring Boot:");
 
@@ -43,5 +47,5 @@ public class ProjetfinalApplication {
 
 		};
 	}
-	
+
 }
