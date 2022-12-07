@@ -1,11 +1,8 @@
 package com.poo.projetfinal;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Io;
 
 public class WebSitePattern {
     // Class permettant de generer le pattern du site web
