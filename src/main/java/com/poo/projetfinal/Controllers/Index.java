@@ -1,9 +1,10 @@
 package com.poo.projetfinal.Controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.lang.Nullable;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.poo.projetfinal.ProjetfinalApplication;
@@ -36,6 +37,7 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class Index {
@@ -58,8 +60,6 @@ public class Index {
 				mav.addObject("username", "Bonjour " + user.getPrenom());
 				mav.addObject("message", "");
 			} catch (BadUserException e) {
-				e.printStackTrace();
-			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		} else {
@@ -89,11 +89,15 @@ public class Index {
 	}
 
 	@GetMapping("/connexion")
-	public ModelAndView Connexion() {
+	public ModelAndView Connexion(@Nullable @RequestParam("accr") String acronym) {
 		var mav = new ModelAndView("connexion");
 
-		// Pattern
 
+		if (acronym == null) {
+			acronym = "";
+		}
+		mav.addObject("ErrorMessage" ,handleErrorMessage(acronym));
+		// Pattern
 		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
 		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
 		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
@@ -112,8 +116,9 @@ public class Index {
 		return mav;
 	}
 
+
 	@PostMapping("/SubmitConnexion")
-	public RedirectView SubmitConnexion(String mail, String password, HttpServletResponse response) {
+	public RedirectView SubmitConnexion(String mail, String password) {
 		String UID = "";
 		if (mail != null && password != null) {
 
@@ -121,13 +126,14 @@ public class Index {
 				User user = new User(mail, password);
 				UID = user.generateUniqueID();
 			} catch (BadPasswordException e) {
-				return new RedirectView("/connexion");
-			} catch (BadUserException e) {
-				return new RedirectView("/connexion");
+				return new RedirectView("/connexion?accr=" + e.getAcronym());
 			}
-			return new RedirectView("/addNote?key=UID&note=" + UID + "&redirectPage=/");
+			catch (BadUserException e){
+				return new RedirectView("/connexion?accr=" + e.getAcronym());
+			}
+			return new RedirectView("/addNote?key=UID&note=" + UID + "&redirectPage=/"); // connexion valide
 		}
-		return new RedirectView("/connexion");
+		return new RedirectView("/connexion"); // champs incomplets
 	}
 
 	@GetMapping("/inscription")
@@ -369,4 +375,16 @@ public class Index {
 
 	}
 
+
+
+	private String handleErrorMessage(String acronym) {
+		if(acronym.equals(BadUserException.ACRONYM)){
+			return new BadUserException().getMessage();
+		}
+		if(acronym.equals(BadPasswordException.ACRONYM)){
+			return new BadPasswordException().getMessage();
+		}
+		return "";
+	}
 }
+

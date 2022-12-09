@@ -1,4 +1,4 @@
-package com.poo.projetfinal.Config;
+package com.poo.projetfinal.config;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
