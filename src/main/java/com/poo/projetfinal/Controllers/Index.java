@@ -89,17 +89,19 @@ public class Index {
 	}
 
 	@GetMapping("/connexion")
-	public ModelAndView Connexion(@Nullable @RequestParam("accr") String acronym) {
+	public ModelAndView Connexion(HttpServletRequest request,
+								  @Nullable @RequestParam("accr") String acronym) {
 		var mav = new ModelAndView("connexion");
 
 
-		if (acronym == null) {
-			acronym = "";
-		}
-		mav.addObject("ErrorMessage" ,handleErrorMessage(acronym));
+
+		handleAcronym(acronym, mav);
+
 		// Pattern
 		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+
 		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+
 		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
 		// Mode Sombre
@@ -190,7 +192,7 @@ public class Index {
 		mav.addObject("recettes", attribute);
 		mav.addObject("username", "Bienvenue ");
 		mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
-	
+
 
 	// Pattern
 
@@ -300,6 +302,7 @@ public class Index {
 	}
 
 	// method to sort values
+
 	@SuppressWarnings("all")
 	private static HashMap sortValues(HashMap map) {
 		List list = new LinkedList(map.entrySet());
@@ -317,7 +320,6 @@ public class Index {
 		}
 		return sortedHashMap;
 	}
-
 	public int userCompare(int temps_user, int temps_recette, int budget_user, int budget_recette) {
 
 		int dif = (int) (Math.abs(temps_recette - temps_user) * 0.2)
@@ -390,6 +392,7 @@ public class Index {
 	}
 
 	// convert BufferedImage to byte[]
+
 	public static byte[] toByteArray(BufferedImage bi, String format)
 			throws IOException {
 
@@ -399,8 +402,8 @@ public class Index {
 		return bytes;
 
 	}
-
 	// convert byte[] to BufferedImage
+
 	public static BufferedImage toBufferedImage(byte[] bytes)
 			throws IOException {
 
@@ -411,7 +414,6 @@ public class Index {
 	}
 
 
-
 	private String handleErrorMessage(String acronym) {
 		if(acronym.equals(BadUserException.ACRONYM)){
 			return new BadUserException().getMessage();
@@ -420,6 +422,16 @@ public class Index {
 			return new BadPasswordException().getMessage();
 		}
 		return "";
+	}
+
+	private void handleAcronym(String acronym, ModelAndView mav) {
+		String className = "d-block";
+		if (acronym == null) {
+			acronym = "";
+			className = "d-none";
+		}
+		mav.addObject("ErrorMessage" ,handleErrorMessage(acronym));
+		mav.addObject("ErrorMessageClassName" , className );
 	}
 }
 
