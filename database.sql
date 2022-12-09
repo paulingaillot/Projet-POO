@@ -28,6 +28,8 @@ CREATE TABLE `recette` (
   PRIMARY KEY (`id`)
 );
 
+INSERT INTO `test`.`users` (`mail`, `password`, `nom`, `prenom`, `age`,`sexe`, `budget`, `temps`)VALUES("admin@foodlovers.ca", "YWJj", "admin", "admin", 21, "H", 15, 15);
+
 
 INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`, `ingredients`)VALUES("Lasagnes",180,30, "pate\nlait");
 INSERT INTO `test`.`recette` (`nom`,`temps`,`budget`)VALUES("Pates",10,2);

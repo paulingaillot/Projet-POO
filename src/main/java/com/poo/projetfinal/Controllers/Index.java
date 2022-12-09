@@ -1,5 +1,6 @@
 package com.poo.projetfinal.Controllers;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +47,7 @@ public class Index {
 		var mav = new ModelAndView("index");
 
 		System.out.println("- DEBUG : "+request.getSession().getAttributeNames().hasMoreElements());
-		if (request.getSession().getAttributeNames().hasMoreElements() == true) {
+		if (request.getSession().getAttribute("UID") != null) {
 			@SuppressWarnings("unchecked")
 			List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
@@ -170,6 +171,41 @@ public class Index {
 		}
 		return new RedirectView("/Inscription");
 	}
+
+	@GetMapping("/testing")
+    public ModelAndView redirectWithUsingRedirectPrefix(ModelMap model) {
+        model.addAttribute("attribute", "redirectWithRedirectPrefix");
+        return new ModelAndView("redirect:/testing2", model);
+    }
+
+	@GetMapping("/testing2")
+	public ModelAndView redirectWithUsingRedirectPrefx(String attribute) {
+        ModelAndView mav = new ModelAndView("/index");
+
+		mav.addObject("recettes", attribute);
+		mav.addObject("username", "Bienvenue ");
+		mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
+	
+
+	// Pattern
+
+	mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+	mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+	mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
+
+	// Mode sombre
+
+	SimpleDateFormat s = new SimpleDateFormat("HH");
+	Date date = new Date();
+
+	if (Integer.parseInt(s.format(date)) >= 16 || Integer.parseInt(s.format(date)) < 8) {
+		mav.addObject("background", "bg-dark text-white");
+	} else {
+		mav.addObject("background", "bg-white text-dark");
+	}
+
+	return mav;
+    }
 
 	@GetMapping("/recettealea")
 	public RedirectView recetteAlea(HttpServletRequest request) throws SQLException {

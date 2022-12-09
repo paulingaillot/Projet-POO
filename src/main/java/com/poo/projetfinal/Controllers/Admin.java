@@ -1,10 +1,12 @@
 package com.poo.projetfinal.Controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,13 +17,28 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.poo.projetfinal.ProjetfinalApplication;
 import com.poo.projetfinal.Recette;
+import com.poo.projetfinal.User;
+import com.poo.projetfinal.Exceptions.BadUserException;
 
 @RestController
 public class Admin {
 
-    @GetMapping("/admin")
+	@GetMapping("/admin")
 	public ModelAndView profil(HttpServletRequest request) {
-        var mav = new ModelAndView("admin");
+
+		@SuppressWarnings("unchecked")
+		ArrayList<String> list = (ArrayList<String>) request.getSession().getAttribute("UID");
+
+		try {
+			User u = new User(list.get(0));
+			if (!u.getMail().equals("admin@foodlovers.ca")) {
+				return new ModelAndView("error", HttpStatus.UNAUTHORIZED);
+			}
+		} catch (BadUserException e) {
+			return new ModelAndView("error", HttpStatus.UNAUTHORIZED);
+		}
+
+		var mav = new ModelAndView("admin");
 
 		// Pattern
 
@@ -29,7 +46,7 @@ public class Admin {
 		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
 		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
-        // Mode sombre
+		// Mode sombre
 
 		SimpleDateFormat s = new SimpleDateFormat("HH");
 		Date date = new Date();
@@ -40,17 +57,17 @@ public class Admin {
 			mav.addObject("background", "bg-white text-dark");
 		}
 
-        return mav;
-    }
+		return mav;
+	}
 
 	@PostMapping("/SubmitRecette")
-	public RedirectView SubmitRecette(HttpServletRequest request, String titre, int prix, int duree, @RequestParam("image") MultipartFile image, String ingredients, String prepa) {
+	public RedirectView SubmitRecette(HttpServletRequest request, String titre, int prix, int duree,
+			@RequestParam("image") MultipartFile image, String ingredients, String prepa) {
 
 		Recette recette = new Recette(titre, prix, duree, ingredients, prepa, image);
 		recette.CreateEntry();
-		
 
-        return new RedirectView("/");
-    }
+		return new RedirectView("/");
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +21,8 @@ public class Profil {
 
 	@GetMapping("/profil")
 	public ModelAndView profil(HttpServletRequest request) {
+
+		if (request.getSession().getAttribute("UID") != null) {
 		var mav = new ModelAndView("profil");
 
 		@SuppressWarnings("unchecked")
@@ -59,6 +62,9 @@ public class Profil {
 		}
 
 		return mav;
+	} else {
+		return new ModelAndView("error", HttpStatus.UNAUTHORIZED);
+	}
 	}
 
 	@GetMapping("/ChangeNom")
