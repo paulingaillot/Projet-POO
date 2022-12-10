@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
 
-  ${head}
+<div th:insert="~{blocks/head.html}">...</div>
 
 <body class="${background}">
 
-  ${header}
+<div th:insert="~{blocks/header.html}">...</div>
+
+<!--  ${header}-->
 
   <h3> Connexion </h3>
-  <div class="alert alert-warning ${ErrorMessageClassName}" role="alert">
-    ${ErrorMessage}
+  <div class="alert alert-warning" th:classappend="${ErrorMessageClassName}" role="alert">
+
+    <span th:text="${ErrorMessage}"></span>
   </div>
   <form action="./SubmitConnexion" method="post">
     <div class="mb-3">
@@ -28,7 +32,8 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 
-  ${footer}
+<div th:insert="~{blocks/footer.html}">...</div>
+
 </body>
 
 </html>
