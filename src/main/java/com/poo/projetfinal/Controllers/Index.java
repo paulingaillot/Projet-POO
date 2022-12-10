@@ -9,11 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.mysql.cj.protocol.a.NumberValueEncoder;
 import com.poo.projetfinal.ProjetfinalApplication;
 import com.poo.projetfinal.Recette;
 import com.poo.projetfinal.User;
+import com.poo.projetfinal.Exceptions.BadEmailException;
+import com.poo.projetfinal.Exceptions.BadFormatException;
 import com.poo.projetfinal.Exceptions.BadPasswordException;
 import com.poo.projetfinal.Exceptions.BadUserException;
+import com.poo.projetfinal.Exceptions.EmptyFieldsException;
+import com.poo.projetfinal.Exceptions.NumberException;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -47,13 +52,13 @@ public class Index {
 
 		var mav = new ModelAndView("index");
 
-		System.out.println("- DEBUG : "+request.getSession().getAttributeNames().hasMoreElements());
+		System.out.println("- DEBUG : " + request.getSession().getAttributeNames().hasMoreElements());
 		if (request.getSession().getAttribute("UID") != null) {
 			@SuppressWarnings("unchecked")
 			List<String> token = (List<String>) request.getSession().getAttribute("UID");
 
 			try {
-				System.out.print("Token : "+token.get(0));
+				System.out.print("Token : " + token.get(0));
 				User user = new User(token.get(0));
 
 				mav.addObject("recettes", getBestRecipes(user.getMail()));
@@ -92,11 +97,8 @@ public class Index {
 	public ModelAndView Connexion(@Nullable @RequestParam("accr") String acronym) {
 		var mav = new ModelAndView("connexion");
 
+		handleAcronym(acronym, mav);
 
-		if (acronym == null) {
-			acronym = "";
-		}
-		mav.addObject("ErrorMessage" ,handleErrorMessage(acronym));
 		// Pattern
 		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
 		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
@@ -116,7 +118,6 @@ public class Index {
 		return mav;
 	}
 
-
 	@PostMapping("/SubmitConnexion")
 	public RedirectView SubmitConnexion(String mail, String password) {
 		String UID = "";
@@ -127,8 +128,7 @@ public class Index {
 				UID = user.generateUniqueID();
 			} catch (BadPasswordException e) {
 				return new RedirectView("/connexion?accr=" + e.getAcronym());
-			}
-			catch (BadUserException e){
+			} catch (BadUserException e) {
 				return new RedirectView("/connexion?accr=" + e.getAcronym());
 			}
 			return new RedirectView("/addNote?key=UID&note=" + UID + "&redirectPage=/"); // connexion valide
@@ -137,8 +137,10 @@ public class Index {
 	}
 
 	@GetMapping("/inscription")
-	public ModelAndView Inscription() {
+	public ModelAndView Inscription(@Nullable @RequestParam("accr") String acronym) {
 		var mav = new ModelAndView("inscription");
+
+		handleAcronym(acronym, mav);
 
 		// Pattern
 
@@ -151,7 +153,7 @@ public class Index {
 		SimpleDateFormat s = new SimpleDateFormat("HH");
 		Date date = new Date();
 
-		if (Integer.parseInt(s.format(date)) >= 20 || Integer.parseInt(s.format(date)) < 8) {
+		if (Integer.parseInt(s.format(date)) >= 16 || Integer.parseInt(s.format(date)) < 8) {
 			mav.addObject("background", "bg-dark text-white");
 		} else {
 			mav.addObject("background", "bg-white text-dark");
@@ -164,53 +166,50 @@ public class Index {
 	public RedirectView SubmitInscription(String mail, String password, String confirm_password, String nom,
 			String prenom, String age, String sexe, String budget, String temps) {
 
-		if (mail != null && password != null && mail != null && confirm_password != null && nom != null && age != null
-				&& sexe != null && budget != null && temps != null && password.equals(confirm_password)) {
-
-			String encoded_password = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes());
-			new User(mail, encoded_password, nom, prenom, Integer.parseInt(age), sexe.charAt(0),
-					Integer.parseInt(budget), Integer.parseInt(temps));
-
-			return new RedirectView("/");
-
+		try {
+			if (mail.isEmpty() || password.isEmpty() || prenom.isEmpty() || confirm_password.isEmpty() || nom.isEmpty()
+					|| age.isEmpty()
+					|| sexe.isEmpty() || budget.isEmpty() || temps.isEmpty() || password.isEmpty()
+					|| confirm_password.isEmpty()) {
+				throw new EmptyFieldsException();
+			}
+		} catch (EmptyFieldsException e) {
+			return new RedirectView("/inscription?accr=" + e.getAcronym());
 		}
-		return new RedirectView("/Inscription");
+
+		try {
+			if (!mail.contains("@") || !mail.contains(".")) {
+				throw new BadEmailException();
+			}
+		} catch (BadEmailException e) {
+			return new RedirectView("/inscription?accr=" + e.getAcronym());
+		}
+
+		try {
+			Integer.parseInt(age);
+			if (Integer.parseInt(age) < 0 || Integer.parseInt(age) > 100) {
+				throw new NumberException();
+			}
+		} catch (NumberFormatException e) {
+			NumberException e1 = new NumberException();
+			return new RedirectView("/inscription?accr=" + e1.getAcronym());
+		}
+
+		try {
+			if (!password.equals(confirm_password)) {
+				throw new BadPasswordException();
+			}
+		} catch (BadPasswordException e) {
+			return new RedirectView("/inscription?accr=" + e.getAcronym());
+		}
+
+		String encoded_password = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes());
+		new User(mail, encoded_password, nom, prenom, Integer.parseInt(age), sexe.charAt(0),
+				Integer.parseInt(budget), Integer.parseInt(temps));
+
+		return new RedirectView("/");
+
 	}
-
-	@GetMapping("/testing")
-    public ModelAndView redirectWithUsingRedirectPrefix(ModelMap model) {
-        model.addAttribute("attribute", "redirectWithRedirectPrefix");
-        return new ModelAndView("redirect:/testing2", model);
-    }
-
-	@GetMapping("/testing2")
-	public ModelAndView redirectWithUsingRedirectPrefx(String attribute) {
-        ModelAndView mav = new ModelAndView("/index");
-
-		mav.addObject("recettes", attribute);
-		mav.addObject("username", "Bienvenue ");
-		mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
-	
-
-	// Pattern
-
-	mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-	mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-	mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
-
-	// Mode sombre
-
-	SimpleDateFormat s = new SimpleDateFormat("HH");
-	Date date = new Date();
-
-	if (Integer.parseInt(s.format(date)) >= 16 || Integer.parseInt(s.format(date)) < 8) {
-		mav.addObject("background", "bg-dark text-white");
-	} else {
-		mav.addObject("background", "bg-white text-dark");
-	}
-
-	return mav;
-    }
 
 	@GetMapping("/recettealea")
 	public RedirectView recetteAlea(HttpServletRequest request) throws SQLException {
@@ -410,16 +409,35 @@ public class Index {
 
 	}
 
-
-
-	private String handleErrorMessage(String acronym) {
-		if(acronym.equals(BadUserException.ACRONYM)){
+	public static String handleErrorMessage(String acronym) {
+		if (acronym.equals(BadUserException.ACRONYM)) {
 			return new BadUserException().getMessage();
 		}
-		if(acronym.equals(BadPasswordException.ACRONYM)){
+		if (acronym.equals(BadPasswordException.ACRONYM)) {
 			return new BadPasswordException().getMessage();
+		}
+		if (acronym.equals(EmptyFieldsException.ACRONYM)) {
+			return new EmptyFieldsException().getMessage();
+		}
+		if (acronym.equals(NumberException.ACRONYM)) {
+			return new NumberException().getMessage();
+		}
+		if (acronym.equals(BadEmailException.ACRONYM)) {
+			return new BadEmailException().getMessage();
+		}
+		if (acronym.equals(BadFormatException.ACRONYM)) {
+			return new BadFormatException().getMessage();
 		}
 		return "";
 	}
-}
 
+	public static void handleAcronym(String acronym, ModelAndView mav) {
+		String className = "d-block";
+		if (acronym == null) {
+			acronym = "";
+			className = "d-none";
+		}
+		mav.addObject("ErrorMessage", handleErrorMessage(acronym));
+		mav.addObject("ErrorMessageClassName", className);
+	}
+}

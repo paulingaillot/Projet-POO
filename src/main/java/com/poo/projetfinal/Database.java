@@ -12,7 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.awt.image.BufferedImage;
+
+import com.poo.projetfinal.Controllers.Index;
 
 public class Database {
     private String url = "jdbc:mysql://127.0.0.1:3306/test";
@@ -203,7 +205,7 @@ public class Database {
         }
     }
 
-    public void createRecipe(String titre, int prix, int duree, String ingredients, String prepa, MultipartFile image) {
+    public void createRecipe(String titre, int prix, int duree, String ingredients, String prepa, BufferedImage image) {
         try {
             Statement sl = ct.createStatement();
 
@@ -219,7 +221,7 @@ public class Database {
             File file = new File("src/main/resources/static/tmp.png");
 
             try (OutputStream os = new FileOutputStream(file)) {
-                os.write(image.getBytes());
+                os.write(Index.toByteArray(image, "png"));
             }
 
             this.sauveIMG("src/main/resources/static/tmp.png", recette_id + "");
