@@ -101,9 +101,8 @@ public class Database {
     public ResultSet getRecettes() {
         try {
             st = ct.prepareStatement("SELECT * FROM recette ORDER BY id DESC;;");
-            ResultSet result = st.executeQuery();
 
-            return result;
+            return st.executeQuery();
         } catch (SQLException e) {
             return null;
         }
@@ -112,9 +111,8 @@ public class Database {
     public ResultSet getRecette(String id_recette) {
         try {
             st = ct.prepareStatement("SELECT * FROM recette WHERE id=" + id_recette + ";");
-            ResultSet result = st.executeQuery();
 
-            return result;
+            return st.executeQuery();
         } catch (SQLException e) {
             return null;
         }
@@ -136,9 +134,8 @@ public class Database {
     public ResultSet getUser(String mail) {
         try {
             st = ct.prepareStatement("SELECT * FROM `users` WHERE `mail`='" + mail + "';");
-            ResultSet result = st.executeQuery();
 
-            return result;
+            return st.executeQuery();
         } catch (SQLException e) {
             return null;
         }

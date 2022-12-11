@@ -1,5 +1,6 @@
 package com.poo.projetfinal.Controllers;
 
+import com.poo.projetfinal.RecipeAffinity;
 import org.springframework.lang.Nullable;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,18 +24,9 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +48,8 @@ public class Index {
 				System.out.print("Token : "+token.get(0));
 				User user = new User(token.get(0));
 
-				mav.addObject("recettes", getBestRecipes(user.getMail()));
+				mav.addObject("recipesAffinity", getBestRecipes(user.getMail()));
+				mav.addObject("recettes", null);
 				mav.addObject("username", "Bonjour " + user.getPrenom());
 				mav.addObject("message", "");
 			} catch (BadUserException e) {
@@ -64,15 +57,16 @@ public class Index {
 			}
 		} else {
 			mav.addObject("recettes", getLastRecipes());
+			mav.addObject("recipesAffinity", null);
 			mav.addObject("username", "Bienvenue ");
-			mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
+			mav.addObject("message", "Connecte-toi ou créé un compte pour découvrir de nouvelles recettes");
 		}
 
 		// Pattern
 
-		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
+//		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
+//		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
+//		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
 		// Mode sombre
 
@@ -189,7 +183,7 @@ public class Index {
 	public ModelAndView redirectWithUsingRedirectPrefx(String attribute) {
         ModelAndView mav = new ModelAndView("/index");
 
-		mav.addObject("recettes", attribute);
+//		mav.addObject("recettes", attribute);
 		mav.addObject("username", "Bienvenue ");
 		mav.addObject("message", "<p>Connecte-toi ou créé un compte pour découvrir de nouvelles recettes</p>");
 
@@ -228,8 +222,9 @@ public class Index {
 		return new RedirectView("/recette?id_recette=" + alea);
 	}
 
-	public String getBestRecipes(String mail) {
+	public ArrayList<RecipeAffinity> getBestRecipes(String mail) {
 
+		ArrayList<RecipeAffinity> map_unsorted = new ArrayList<>();
 		try {
 
 			ResultSet result = ProjetfinalApplication.sql.getUser(mail);
@@ -241,64 +236,41 @@ public class Index {
 
 			result = ProjetfinalApplication.sql.getRecettes();
 
-			HashMap<Recette, Integer> map_unsorted = new HashMap<>();
 			while (result.next()) {
 				String nom = result.getString("nom");
 				int temps_recette = Integer.parseInt(result.getString("temps"));
 				int budget_recette = Integer.parseInt(result.getString("budget"));
 				int id_recette = Integer.parseInt(result.getString("id"));
 
-				map_unsorted.put(new Recette(nom, temps_recette, budget_recette, id_recette),
-						userCompare(temps, temps_recette, budget, budget_recette));
+				Recette recipe = new Recette(nom, temps_recette, budget_recette, id_recette);
+				int affinity = userCompare(temps, temps_recette, budget, budget_recette);
+				map_unsorted.add(new RecipeAffinity(recipe,affinity));
 			}
 
 			@SuppressWarnings("unchecked")
-			HashMap<Recette, Integer> sorted_map = sortValues(map_unsorted);
+//			HashMap<Recette, Integer> sorted_map = sortValues(map_unsorted);
 
-			String affichage = "";
-			int i = 0;
-			Set<Entry<Recette, Integer>> set = sorted_map.entrySet();
-			Iterator<Entry<Recette, Integer>> iterator = set.iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<Recette, Integer> map = (Map.Entry<Recette, Integer>) iterator.next();
+			ArrayList<RecipeAffinity> sorted = (ArrayList<RecipeAffinity>) map_unsorted.stream()
+					.sorted(Comparator.comparingInt(RecipeAffinity::getScore)).toList();
 
-				if (i % 3 == 0) {
-					if (i != 0)
-						affichage += "</div>";
-					affichage += "<div class='row'>";
-				}
-
-				i++;
-
-				String imagevalue = "";
+			for (RecipeAffinity ra: sorted) {
 				try {
-					byte[] imagetab = ProjetfinalApplication.sql.chargeIMG(map.getKey().getId() + "");
+					byte[] imagetab = ProjetfinalApplication.sql.chargeIMG(ra.getRecipe().getId() + "");
 					String response = Base64.getEncoder().encodeToString(imagetab);
-					imagevalue = "data:image/png;base64," + response + "";
+					String imagevalue = "data:image/png;base64," + response + "";
+					ra.getRecipe().setImageRendered(imagevalue);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
-				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
-						+ "<img src='" + imagevalue + "' class='card-img-top' alt='img' width=100px >"
-						+ "<div class='card-body'>"
-						+ "<h5 class='card-title'>#" + i + " | " + map.getKey().getNom() + "</h5>"
-						+ "<p><b>Durée :</b> " + map.getKey().getduree() + "min</p>"
-						+ "<p><b>Budget :</b> " + map.getKey().getBudget() + "€</p>"
-						+ "<p><b>Recommandation :</b> " + map.getValue() + "%</p>"
-						+ "<a href='./recette?id_recette=" + map.getKey().getId()
-						+ "' class='stretched-link btn btn-dark'>Plus D'informations</a>"
-						+ "</div></div><div class='col-sm-2'></div>";
-
 			}
 			ProjetfinalApplication.sql.close();
-			affichage += "</div>";
 
-			return affichage;
+			return sorted;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return "error";
+		return map_unsorted;
 	}
 
 	// method to sort values
@@ -340,27 +312,19 @@ public class Index {
 		return pourcent;
 	}
 
-	public String getLastRecipes() {
+	public ArrayList<Recette> getLastRecipes() {
+		ArrayList<Recette> returned = new ArrayList<>();
 		try {
 
 			ResultSet result = ProjetfinalApplication.sql.getRecettes();
-
-			String affichage = "";
-			int i = 0;
 			while (result.next()) {
-				String id = result.getString("id");
+
+				int id = result.getInt("id");
 				String nom = result.getString("nom");
-				String temps = result.getString("temps");
-				String prix = result.getString("budget");
+				int temps = result.getInt("temps");
+				int prix = result.getInt("budget");
 				String id_recette = result.getString("id");
-
-				if (i % 3 == 0) {
-					if (i != 0)
-						affichage += "</div>";
-					affichage += "<div class='row'>";
-				}
-
-				i++;
+				returned.add(new Recette(nom,temps,prix,id));
 
 				String imagevalue = "";
 				try {
@@ -371,24 +335,15 @@ public class Index {
 					e.printStackTrace();
 				}
 
-				affichage += "<div class='card col-sm-3 text-bg-secondary' style='width: 18rem;'>"
-						+ "<img src='" + imagevalue + "' class='card-img-top' alt='img' width=100px >"
-						+ "<div class='card-body'>"
-						+ "<h5 class='card-title'>#" + i + " | " + nom + "</h5>"
-						+ "<p><b>Durée :</b> " + temps + "min</p>"
-						+ "<p><b>Budget :</b> " + prix + "€</p>"
-						+ "<a href='./recette?id_recette=" + id
-						+ "' class='stretched-link btn btn-dark'>Plus D'informations</a>"
-						+ "</div></div><div class='col-sm-2'></div>";
+				returned.get(returned.size()-1).setImageRendered(imagevalue);
 			}
-			affichage += "</div>";
 			ProjetfinalApplication.sql.close();
 
-			return affichage;
+			return returned;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return "error";
+		return returned;
 	}
 
 	// convert BufferedImage to byte[]

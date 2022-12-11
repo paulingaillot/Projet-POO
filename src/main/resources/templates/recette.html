@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 
-${head}
+<div th:insert="~{blocks/head.html}"></div>
 
 <body class="${background}">
 
-    ${header}
+<div th:insert="~{blocks/header.html}"></div>
 
 
     <div class="container text-center">
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-6">
-                ${recette_image}
+                <span th:text="${recette_image}"></span>
 
             </div>
 
             <div class="col-sm-4">
 
-                <h2> ${recette_title}</h2>
+                <h2> <span th:text="${recette_title}"></span> </h2>
                 <br>
                 <hr><br>
-                <div>${recette_cout} euros</div>
-                <div>${recette_duree} min</div>
+                <div><span th:text="${recette_cout}"></span> euros</div>
+                <div><span th:text="${recette_duree}"></span> min</div>
             </div>
             <div><br>
                 <hr><br>
@@ -31,16 +31,17 @@ ${head}
                 <div class="col-sm-1"></div>
                 <div class="col-sm-4">
                     <h3>Ingrédients</h3>
-                    ${recette_ingredients}
+                    <span th:text="${recette_ingredients}"></span>
                 </div>
                 <div class="col-sm-6">
                     <h3>Etapes de préparation</h3>
-                    ${recette_prepa}
+                    <span th:text="${recette_prepa}"></span>
                 </div>
             </div>
         </div>
 
-        ${footer}
+        <div th:insert="~{blocks/footer.html}"></div>
+    </div>
 </body>
 
 </html>

@@ -1,20 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-${head}
+<div th:insert="~{blocks/head.html}"></div>
 
 <body class="${background}">
 
-  ${header}
+  <div th:insert="~{blocks/header.html}"></div>
 
-  <h3>${username} !</h3>
-  ${message}
+  <h3><span th:text="${username}"></span> !</h3>
+  <p th:text="${message}"></p>
+
 
   <div class="container text-center">
-    ${recettes}
-  </div>
 
-  ${footer}
+      <div th:each="recette : ${recettes}">
+        <span th:object="recettes."></span>
+        <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
+          <img th:src="${recettes.get(0).getImageRendered()}" class='card-img-top' alt='img' width=100px >
+          <div class='card-body'>
+            <h5 class='card-title'>$i | $nom </h5>
+<!--            <p><b>Durée :</b>  <span th:text="${recette.temps}"></span> min</p>-->
+<!--            <p><b>Budget :</b> <span th:text="${recette.prix}"></span> €</p>-->
+            <a href='./recette?id_recette=" + ${id}"' class='stretched-link btn btn-dark'>Plus D'informations</a>
+            </div>
+        </div>
+        <div class='col-sm-2'></div>
+
+      </div>
+
+
+<!--      <div th:each="recipesAff, iStat : ${recipesAffinity} ">-->
+<!--        <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>-->
+<!--        <img src='" + imagevalue + "' class='card-img-top' alt='img' width=100px >-->
+<!--        <div class='card-body'>-->
+<!--          <h5 class='card-title'>${iStat.count}  | map.getKey().getNom() </h5>-->
+<!--          <p><b>Durée :</b> map.getKey().getduree() min</p>-->
+<!--          <p><b>Budget :</b> map.getKey().getBudget() €</p>-->
+<!--          <p><b>Recommandation :</b> <span th:text="${recipesAff.score}"></span> %</p>-->
+<!--          <a href='./recette?id_recette=" + map.getKey().getId()' class='stretched-link btn btn-dark'>Plus D'informations</a>-->
+<!--          </div></div><div class='col-sm-2'></div>-->
+<!--      </div>-->
+<!--  </div>-->
+
+  <div th:insert="~{blocks/footer.html}"></div>
 </body>
 
 </html>

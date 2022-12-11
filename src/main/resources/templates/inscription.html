@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-${head}
+<div th:insert="~{blocks/head.html}"></div>
 
-<body class="${background}">
+<body th:class="${background}">
 
-  ${header}
+<div th:insert="~{blocks/header.html}"></div>
+
 
   <div class="container text-center">
     <div class="row">
@@ -115,7 +116,8 @@ ${head}
     </div>
   </div>
 
-  ${footer}
+<div th:insert="~{blocks/footer.html}"></div>
+
 </body>
 
 </html>
