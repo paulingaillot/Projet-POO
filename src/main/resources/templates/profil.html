@@ -17,8 +17,8 @@
     <hr>
     <br>
     <div class="row">
-      <div class="alert alert-warning ${ErrorMessageClassName}" role="alert">
-        ${ErrorMessage}
+      <div class="alert alert-warning " th:classappend="${ErrorMessageClassName}" role="alert">
+        <span th:text="${ErrorMessage}"></span>
       </div>
     </div>
     <div class="row">

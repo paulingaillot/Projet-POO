@@ -57,7 +57,7 @@ public class Recette {
         return nom;
     }
 
-    public int getduree() {
+    public int getDuree() {
         return duree;
     }
 

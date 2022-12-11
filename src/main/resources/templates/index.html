@@ -13,15 +13,15 @@
 
   <div class="container text-center">
 
-      <div th:each="recette : ${recettes}">
-        <span th:object="recettes."></span>
+      <div th:each="recipe, iterStat : ${recettes}">
+
         <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
-          <img th:src="${recettes.get(0).getImageRendered()}" class='card-img-top' alt='img' width=100px >
+          <img th:src="${recipe.getImageRendered()}? ${recipe.getImageRendered()} : '' " class='card-img-top' alt='img' width=100px >
           <div class='card-body'>
-            <h5 class='card-title'>$i | $nom </h5>
-<!--            <p><b>Durée :</b>  <span th:text="${recette.temps}"></span> min</p>-->
-<!--            <p><b>Budget :</b> <span th:text="${recette.prix}"></span> €</p>-->
-            <a href='./recette?id_recette=" + ${id}"' class='stretched-link btn btn-dark'>Plus D'informations</a>
+            <h5 class='card-title'><span th:text="${iterStat.index}"></span> | <span th:text="${recipe.getNom()}"></span> </h5>
+            <p><b>Durée :</b>  <span th:text="${recipe.getDuree()}"></span> min</p>
+            <p><b>Budget :</b> <span th:text="${recipe.getBudget()}"></span> €</p>
+            <a th:href="@{'/recette?id_recette=' + ${recipe.getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
             </div>
         </div>
         <div class='col-sm-2'></div>
@@ -29,18 +29,18 @@
       </div>
 
 
-<!--      <div th:each="recipesAff, iStat : ${recipesAffinity} ">-->
-<!--        <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>-->
-<!--        <img src='" + imagevalue + "' class='card-img-top' alt='img' width=100px >-->
-<!--        <div class='card-body'>-->
-<!--          <h5 class='card-title'>${iStat.count}  | map.getKey().getNom() </h5>-->
-<!--          <p><b>Durée :</b> map.getKey().getduree() min</p>-->
-<!--          <p><b>Budget :</b> map.getKey().getBudget() €</p>-->
-<!--          <p><b>Recommandation :</b> <span th:text="${recipesAff.score}"></span> %</p>-->
-<!--          <a href='./recette?id_recette=" + map.getKey().getId()' class='stretched-link btn btn-dark'>Plus D'informations</a>-->
-<!--          </div></div><div class='col-sm-2'></div>-->
-<!--      </div>-->
-<!--  </div>-->
+      <div th:each="recipesAff, iStat : ${recipesAffinity} ">
+        <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
+        <img th:src="${recipesAff.getRecipe().getImageRendered()}? ${recipesAff.getRecipe().getImageRendered()} : '' " class='card-img-top' alt='img' width=100px >
+        <div class='card-body'>
+          <h5 class='card-title'><span th:text="${iStat.count}"></span>  | <span th:text:="${recipesAff.getRecipe().getNom()}"></span> </h5>
+          <p><b>Durée :</b> <span th:text="${recipesAff.getRecipe().getDuree()}"></span> min</p>
+          <p><b>Budget :</b> <span th:text="${recipesAff.getRecipe().getBudget()}"></span> €</p>
+          <p><b>Recommandation :</b> <span th:text="${recipesAff.getScore()}"></span> %</p>
+          <a th:href="@{'/recette?id_recette=' + ${recipeAff.getRecipe().getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
+          </div></div><div class='col-sm-2'></div>
+      </div>
+  </div>
 
   <div th:insert="~{blocks/footer.html}"></div>
 </body>

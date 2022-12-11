@@ -22,14 +22,14 @@
 
       </div>
       <div class="col-md-8 border p-4 px-5">
-        <div class="alert alert-warning ${ErrorMessageClassName}" role="alert">
-          ${ErrorMessage}
+        <div class="alert alert-warning " th:classappend="${ErrorMessageClassName}" role="alert">
+          <span th:text="${ErrorMessage}"></span>
         </div>
         <form action="./SubmitInscription" method="post">
 
           <div class="input-group mb-3">
 
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">mail</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon0">mail</span>
             <input type="name" placeholder="Mail" class="form-control" id="exampleInputEmail1" name="mail"
               aria-describedby="emailHelp">
 
@@ -42,19 +42,19 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">person</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon2">person</span>
             <input type="text" class="form-control" name="prenom" placeholder="Prenom" aria-label="Prenom"
-              aria-describedby="basic-addon1">
+              aria-describedby="basic-addon2">
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon3">calendar_month</span>
             <input type="text" class="form-control" name="age" placeholder="Age" aria-label="Age"
-              aria-describedby="basic-addon1">
+              aria-describedby="basic-addon3">
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">group</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon4">group</span>
             <select class="form-select" name="sexe" aria-label="Default select example">
               <option selected>Choisir un genre</option>
               <option value="H">Homme</option>
@@ -64,10 +64,10 @@
           </div>
 
           <div class="mb-3">
-            <label for="customRange1" class="form-label">Budget</label>
+            <label for="selectBudget" class="form-label">Budget</label>
             <div class="input-group">
-              <span class="input-group-text material-symbols-outlined" id="basic-addon1">paid</span>
-              <select class="form-select" name="budget" aria-label="Default select example">
+              <span class="input-group-text material-symbols-outlined" id="basic-addon6">paid</span>
+              <select class="form-select" name="budget" aria-label="Default select example" id="selectBudget">
                 <option selected>Choisir un budget</option>
                 <option value="5">
                   <10€ </option>
@@ -79,10 +79,10 @@
           </div>
 
           <div class="mb-3">
-            <label for="customRange1" class="form-label">Temps</label>
+            <label for="selectDuree" class="form-label">Temps</label>
             <div class="input-group">
-              <span class="input-group-text material-symbols-outlined" id="basic-addon1">schedule</span>
-              <select class="form-select" name="temps" aria-label="Default select example">
+              <span class="input-group-text material-symbols-outlined" id="basic-addon7">schedule</span>
+              <select class="form-select" name="temps" aria-label="Default select example" id="selectDuree">
                 <option selected>Choisir une durée</option>
                 <option value="5">
                   <20min </option>
@@ -97,16 +97,16 @@
           <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Password</label>
             <div class="input-group">
-              <span class="input-group-text material-symbols-outlined" id="basic-addon1">lock</span>
+              <span class="input-group-text material-symbols-outlined" id="basic-addon8">lock</span>
               <input type="password" name="password" class="form-control" id="exampleInputPassword1">
             </div>
           </div>
 
           <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+            <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
             <div class="input-group">
-              <span class="input-group-text material-symbols-outlined" id="basic-addon1">lock</span>
-              <input type="password" name="confirm_password" class="form-control" id="exampleInputPassword1">
+              <span class="input-group-text material-symbols-outlined" id="basic-addon9">lock</span>
+              <input type="password" name="confirm_password" class="form-control" id="exampleInputPassword2">
             </div>
           </div>
 

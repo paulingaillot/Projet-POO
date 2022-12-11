@@ -50,7 +50,6 @@ public class Index {
 			try {
 				System.out.print("Token : " + token.get(0));
 				User user = new User(token.get(0));
-
 				mav.addObject("recipesAffinity", getBestRecipes(user.getMail()));
 				mav.addObject("recettes", null);
 				mav.addObject("username", "Bonjour " + user.getPrenom());
@@ -64,12 +63,6 @@ public class Index {
 			mav.addObject("username", "Bienvenue ");
 			mav.addObject("message", "Connecte-toi ou créé un compte pour découvrir de nouvelles recettes");
 		}
-
-		// Pattern
-
-//		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-//		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-//		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
 		// Mode sombre
 
@@ -89,9 +82,6 @@ public class Index {
 	public ModelAndView Connexion(HttpServletRequest request,
 								  @Nullable @RequestParam("accr") String acronym) {
 		var mav = new ModelAndView("connexion");
-
-		handleAcronym(acronym, mav);
-
 
 		handleAcronym(acronym, mav);
 
@@ -165,8 +155,7 @@ public class Index {
 			String prenom, String age, String sexe, String budget, String temps) {
 
 		try {
-			if (mail.isEmpty() || password.isEmpty() || prenom.isEmpty() || confirm_password.isEmpty() || nom.isEmpty()
-					|| age.isEmpty()
+			if (mail.isEmpty() || prenom.isEmpty() || nom.isEmpty() || age.isEmpty()
 					|| sexe.isEmpty() || budget.isEmpty() || temps.isEmpty() || password.isEmpty()
 					|| confirm_password.isEmpty()) {
 				throw new EmptyFieldsException();
