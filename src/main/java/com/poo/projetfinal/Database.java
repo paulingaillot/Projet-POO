@@ -174,14 +174,18 @@ public class Database {
                     byte[] result = istreamImage.readAllBytes();
                     return result;
                 }
-            } finally {
+
+            }catch ( NullPointerException e){
+                System.out.println("No image registered for this element");
+            }
+            finally {
                 rs.close();
             }
         } finally {
             ps.close();
         }
         System.out.println("error");
-        return null;
+        return  null;
 
     }
 

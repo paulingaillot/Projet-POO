@@ -42,22 +42,24 @@ public class Index {
 
 		var mav = new ModelAndView("index");
 
+		 //not logged in
 		System.out.println("- DEBUG : " + request.getSession().getAttributeNames().hasMoreElements());
-		if (request.getSession().getAttribute("UID") != null) {
-			@SuppressWarnings("unchecked")
-			List<String> token = (List<String>) request.getSession().getAttribute("UID");
+		if ( request.getSession().getAttribute("UID") != null
+				&& request.getSession().getAttribute("UID") != "") {
+			String token = (String) request.getSession().getAttribute("UID");
 
 			try {
-				System.out.print("Token : " + token.get(0));
-				User user = new User(token.get(0));
+				System.out.print("Token : " + token);
+				User user = new User(token);
 				mav.addObject("recipesAffinity", getBestRecipes(user.getMail()));
 				mav.addObject("recettes", null);
 				mav.addObject("username", "Bonjour " + user.getPrenom());
-				mav.addObject("message", "");
+				mav.addObject("message", " ");
 			} catch (BadUserException e) {
 				e.printStackTrace();
 			}
 		} else {
+			request.getSession().setAttribute("UID", "");
 			mav.addObject("recettes", getLastRecipes());
 			mav.addObject("recipesAffinity", null);
 			mav.addObject("username", "Bienvenue ");
@@ -84,13 +86,6 @@ public class Index {
 		var mav = new ModelAndView("connexion");
 
 		handleAcronym(acronym, mav);
-
-		// Pattern
-		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-
-		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-
-		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
 		// Mode Sombre
 
@@ -119,7 +114,7 @@ public class Index {
 			} catch (BadUserException e) {
 				return new RedirectView("/connexion?accr=" + e.getAcronym());
 			}
-			return new RedirectView("/addNote?key=UID&note=" + UID + "&redirectPage=/"); // connexion valide
+			return new RedirectView("/addToSession?key=UID&note=" + UID + "&redirectPage=/"); // connexion valide
 		}
 		return new RedirectView("/connexion"); // champs incomplets
 	}
@@ -129,12 +124,6 @@ public class Index {
 		var mav = new ModelAndView("inscription");
 
 		handleAcronym(acronym, mav);
-
-		// Pattern
-
-		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
 		// Mode Sombre
 
@@ -212,7 +201,7 @@ public class Index {
 		return new RedirectView("/recette?id_recette=" + alea);
 	}
 
-	public ArrayList<RecipeAffinity> getBestRecipes(String mail) {
+	public List<RecipeAffinity> getBestRecipes(String mail) {
 
 		ArrayList<RecipeAffinity> map_unsorted = new ArrayList<>();
 		try {
@@ -237,10 +226,7 @@ public class Index {
 				map_unsorted.add(new RecipeAffinity(recipe,affinity));
 			}
 
-			@SuppressWarnings("unchecked")
-//			HashMap<Recette, Integer> sorted_map = sortValues(map_unsorted);
-
-			ArrayList<RecipeAffinity> sorted = (ArrayList<RecipeAffinity>) map_unsorted.stream()
+			List<RecipeAffinity> sorted = map_unsorted.stream()
 					.sorted(Comparator.comparingInt(RecipeAffinity::getScore)).toList();
 
 			for (RecipeAffinity ra: sorted) {
@@ -250,6 +236,7 @@ public class Index {
 					String imagevalue = "data:image/png;base64," + response + "";
 					ra.getRecipe().setImageRendered(imagevalue);
 				} catch (Exception e) {
+					ra.getRecipe().setImageRendered("");
 					e.printStackTrace();
 				}
 

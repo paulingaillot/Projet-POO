@@ -30,16 +30,15 @@ public class Profil {
 		if (request.getSession().getAttribute("UID") != null) {
 			var mav = new ModelAndView("profil");
 
-			@SuppressWarnings("unchecked")
-			List<String> token = (List<String>) request.getSession().getAttribute("UID");
+			String token = (String) request.getSession().getAttribute("UID");
 
 			Index.handleAcronym(acronym, mav);
 
 			// Infos Users
 
-			User u = null;
+			User u;
 			try {
-				u = new User(token.get(0));
+				u = new User(token);
 
 				mav.addObject("nom", u.getNom());
 				mav.addObject("prenom", u.getPrenom());
@@ -50,12 +49,6 @@ public class Profil {
 			} catch (BadUserException e) {
 				e.printStackTrace();
 			}
-
-			// Pattern
-
-			mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-			mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-			mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
 
 			// Mode sombre
 
@@ -76,8 +69,8 @@ public class Profil {
 
 	@GetMapping("/ChangeNom")
 	public RedirectView ChangeNom(HttpServletRequest request, String nom) {
-		@SuppressWarnings("unchecked")
-		List<String> token = (List<String>) request.getSession().getAttribute("UID");
+
+		String token = (String) request.getSession().getAttribute("UID");
 
 		try {
 			if (nom.isEmpty())
@@ -87,7 +80,7 @@ public class Profil {
 		}
 
 		try {
-			User u = new User(token.get(0));
+			User u = new User(token);
 			u.setNom(nom);
 			u.updateDatabase();
 		} catch (BadUserException e) {
@@ -98,8 +91,8 @@ public class Profil {
 
 	@GetMapping("/ChangePrenom")
 	public RedirectView ChangePrenom(HttpServletRequest request, String prenom) {
-		@SuppressWarnings("unchecked")
-		List<String> token = (List<String>) request.getSession().getAttribute("UID");
+
+		String token = (String) request.getSession().getAttribute("UID");
 
 		try {
 			if (prenom.isEmpty())
@@ -109,7 +102,7 @@ public class Profil {
 		}
 
 		try {
-			User u = new User(token.get(0));
+			User u = new User(token);
 			u.setPrenom(prenom);
 			u.updateDatabase();
 		} catch (BadUserException e) {
@@ -120,8 +113,8 @@ public class Profil {
 
 	@GetMapping("/ChangeMail")
 	public RedirectView ChangeMail(HttpServletRequest request, String mail) {
-		@SuppressWarnings("unchecked")
-		List<String> token = (List<String>) request.getSession().getAttribute("UID");
+
+		String token = (String) request.getSession().getAttribute("UID");
 
 		try {
 			if (mail.isEmpty())
@@ -138,7 +131,7 @@ public class Profil {
 		}
 
 		try {
-			User u = new User(token.get(0));
+			User u = new User(token);
 			u.setMail(mail);
 			u.updateDatabase();
 		} catch (BadUserException e) {
@@ -149,8 +142,8 @@ public class Profil {
 
 	@GetMapping("/ChangeBudget")
 	public RedirectView ChangeBudget(HttpServletRequest request, String budget) {
-		@SuppressWarnings("unchecked")
-		List<String> token = (List<String>) request.getSession().getAttribute("UID");
+
+		String token = (String) request.getSession().getAttribute("UID");
 
 		try {
 			if (Integer.parseInt(budget) < 0)
@@ -161,7 +154,7 @@ public class Profil {
 		}
 
 		try {
-			User u = new User(token.get(0));
+			User u = new User(token);
 			u.setBudget(Integer.parseInt(budget));
 			u.updateDatabase();
 		} catch (BadUserException e) {
@@ -172,8 +165,8 @@ public class Profil {
 
 	@GetMapping("/ChangeTemps")
 	public RedirectView ChangeTemps(HttpServletRequest request, String temps) {
-		@SuppressWarnings("unchecked")
-		List<String> token = (List<String>) request.getSession().getAttribute("UID");
+
+		String token = (String) request.getSession().getAttribute("UID");
 
 		try {
 			if (Integer.parseInt(temps) < 0)
@@ -184,7 +177,7 @@ public class Profil {
 		}
 
 		try {
-			User u = new User(token.get(0));
+			User u = new User(token);
 			u.setTemps(Integer.parseInt(temps));
 			u.updateDatabase();
 		} catch (BadUserException e) {

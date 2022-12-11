@@ -21,9 +21,16 @@
                         aria-expanded="false">
                         User
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="./connexion">Connexion</a></li>
+                    <ul class="dropdown-menu" th:if="${session.get('UID') == ''}">
+                        <li>
+                            <a class="dropdown-item" href="./connexion">Connexion</a>
+                        </li>
                         <li><a class="dropdown-item" href="./inscription">Inscription</a></li>
+                    </ul>
+                    <ul class="dropdown-menu" th:if="${session.get('UID') != ''}">
+                        <li>
+                            <a class="dropdown-item" href="./profil">Profil</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
