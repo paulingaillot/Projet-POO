@@ -1,20 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-${head}
+<div th:insert="~{blocks/head.html}"></div>
 
-<body class="${background}">
+<body th:class="${background}">
 
-  ${header}
+  <div th:insert="~{blocks/header.html}"></div>
 
-  <h3>${username} !</h3>
-  ${message}
+  <h3><span th:text="${username}"></span> !</h3>
+  <p th:text="${message}"></p>
+
 
   <div class="container text-center">
-    ${recettes}
+      <div th:if="${recettes}">
+        <div th:each="recipe, iterStat : ${recettes}">
+
+        <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
+          <img th:src="${recipe.getImageRendered()}? ${recipe.getImageRendered()} : 'a' " class='card-img-top' alt='img' width=100px  >
+<!--          <img th:src="@{'../static/' + ${recipe.getId()} + '.png'}" class='card-img-top' alt='img' width=100px  >-->
+          <div class='card-body'>
+            <h5 class='card-title'><span th:text="${iterStat.index + 1}"></span> | <span th:text="${recipe.getNom()}"></span> </h5>
+            <p><b>Durée :</b>  <span th:text="${recipe.getDuree()}"></span> min</p>
+            <p><b>Budget :</b> <span th:text="${recipe.getBudget()}"></span> €</p>
+            <a th:href="@{'/recette?id_recette=' + ${recipe.getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
+            </div>
+        </div>
+        <div class='col-sm-2'></div>
+
+        </div>
+      </div>
+
+      <div th:if="${recipesAffinity} != null">
+        <div th:each="recipesAff, iStat : ${recipesAffinity} ">
+          <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
+          <img th:src="${recipesAff.getRecipe()?.getImageRendered()}" class='card-img-top' alt='img' width=100px >
+          <div class='card-body'>
+            recette content:
+            <h5 class='card-title'><span th:text="${iStat.count + 1}"></span>  | <span th:text="${recipesAff.getRecipe().getNom()}"></span> </h5>
+            <p><b>Durée :</b> <span th:text="${recipesAff.getRecipe().getDuree()}"></span> min</p>
+            <p><b>Budget :</b> <span th:text="${recipesAff.getRecipe().getBudget()}"></span> €</p>
+            <p><b>Recommandation :</b> <span th:text="${recipesAff.getScore()}"></span> %</p>
+            <a th:href="@{'/recette?id_recette=' + ${recipesAff.getRecipe().getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
+            </div></div><div class='col-sm-2'></div>
+        </div>
+      </div>
   </div>
 
-  ${footer}
+  <div th:insert="~{blocks/footer.html}"></div>
 </body>
 
 </html>

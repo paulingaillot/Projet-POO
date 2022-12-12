@@ -68,12 +68,6 @@ public class InfosRecettes {
 
         ProjetfinalApplication.sql.close();
 
-		// Pattern
-
-		mav.addObject("head", ProjetfinalApplication.pattern.getHead());
-		mav.addObject("header", ProjetfinalApplication.pattern.getHeader());
-		mav.addObject("footer", ProjetfinalApplication.pattern.getFooter());
-
         // Mode sombre
 
         SimpleDateFormat s = new SimpleDateFormat("HH");

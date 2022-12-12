@@ -23,7 +23,7 @@ public class WebSitePattern {
             String ligne;
             this.head = "";
 
-            lecteurAvecBuffer = new BufferedReader(new FileReader("src/main/resources/templates/head.html"));
+            lecteurAvecBuffer = new BufferedReader(new FileReader("src/main/resources/templates/blocks/head.html"));
 
             while ((ligne = lecteurAvecBuffer.readLine()) != null) {
                 head += ligne;
@@ -41,7 +41,7 @@ public class WebSitePattern {
             String ligne;
             this.header = "";
 
-            lecteurAvecBuffer = new BufferedReader(new FileReader("src/main/resources/templates/header.html"));
+            lecteurAvecBuffer = new BufferedReader(new FileReader("src/main/resources/templates/blocks/header.html"));
 
             while ((ligne = lecteurAvecBuffer.readLine()) != null) {
                 header += ligne;
@@ -59,7 +59,7 @@ public class WebSitePattern {
             String ligne;
             this.footer = "";
 
-            lecteurAvecBuffer = new BufferedReader(new FileReader("src/main/resources/templates/footer.html"));
+            lecteurAvecBuffer = new BufferedReader(new FileReader("src/main/resources/templates/blocks/footer.html"));
 
             while ((ligne = lecteurAvecBuffer.readLine()) != null) {
                 footer += ligne;

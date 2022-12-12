@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-${head}
+<div th:insert="~{blocks/head.html}"></div>
 
-<body class="${background}">
+<body th:class="${background}">
 
-  ${header}
+<div th:insert="~{blocks/header.html}"></div>
 
   <div class="container text-center">
     <div class="row">
@@ -17,8 +17,8 @@ ${head}
     <hr>
     <br>
     <div class="row">
-      <div class="alert alert-warning ${ErrorMessageClassName}" role="alert">
-        ${ErrorMessage}
+      <div class="alert alert-warning " th:classappend="${ErrorMessageClassName}" role="alert">
+        <span th:text="${ErrorMessage}"></span>
       </div>
     </div>
     <div class="row">
@@ -28,7 +28,7 @@ ${head}
 
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">Nom</span>
-            <input type="text" class="form-control" name="nom" placeholder="${nom}" aria-label="Nom"
+            <input type="text" class="form-control" name="nom" th:placeholder="${nom}" aria-label="Nom"
               aria-describedby="basic-addon1">
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
@@ -43,9 +43,9 @@ ${head}
         <form action="./ChangePrenom" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Prenom</span>
-            <input type="text" class="form-control" name="prenom" placeholder="${prenom}" aria-label="Nom"
-              aria-describedby="basic-addon1">
+            <span class="input-group-text" id="basic-addon2">Prenom</span>
+            <input type="text" class="form-control" name="prenom" th:placeholder="${prenom}" aria-label="Nom"
+              aria-describedby="basic-addon2">
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
@@ -59,9 +59,9 @@ ${head}
         <form action="./ChangeMail" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text " id="basic-addon1">e-mail</span>
-            <input type="text" class="form-control" name="mail" placeholder="${mail}" aria-label="Nom"
-              aria-describedby="basic-addon1">
+            <span class="input-group-text " id="basic-addon3">e-mail</span>
+            <input type="text" class="form-control" name="mail" th:placeholder="${mail}" aria-label="Nom"
+              aria-describedby="basic-addon3">
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
@@ -75,9 +75,9 @@ ${head}
         <form action="./ChangeBudget" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Budget</span>
-            <input type="text" class="form-control" name="budget" placeholder="${budget}" aria-label="Nom"
-              aria-describedby="basic-addon1">
+            <span class="input-group-text" id="basic-addon4">Budget</span>
+            <input type="text" class="form-control" name="budget" th:placeholder="${budget}" aria-label="Nom"
+              aria-describedby="basic-addon4">
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
@@ -91,9 +91,9 @@ ${head}
         <form action="./ChangeTemps" method="get" enctype="multipart/form-data">
 
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Temps</span>
-            <input type="text" class="form-control" name="temps" placeholder="${temps}" aria-label="Nom"
-              aria-describedby="basic-addon1">
+            <span class="input-group-text" id="basic-addon5">Temps</span>
+            <input type="text" class="form-control" name="temps" th:placeholder="${temps}" aria-label="Nom"
+              aria-describedby="basic-addon5">
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
 
@@ -103,7 +103,7 @@ ${head}
   </div>
 
 
-  ${footer}
+  <div th:insert="~{blocks/footer.html}"></div>
 </body>
 
 </html>

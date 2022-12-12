@@ -12,6 +12,8 @@ public class Recette {
     private String[] ingredients;
     private BufferedImage image;
 
+    private String imageRendered;
+
     public Recette(String nom, int duree, int budget, int id) {
         this.id = id;
         this.nom = nom;
@@ -55,11 +57,19 @@ public class Recette {
         return nom;
     }
 
-    public int getduree() {
+    public int getDuree() {
         return duree;
     }
 
     public int getBudget() {
         return budget;
+    }
+
+    public String getImageRendered() {
+        return imageRendered;
+    }
+
+    public void setImageRendered(String imageRendered) {
+        this.imageRendered = imageRendered;
     }
 }

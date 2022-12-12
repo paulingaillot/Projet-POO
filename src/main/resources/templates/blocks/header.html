@@ -8,22 +8,29 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="./">Accueil</a>
+                    <a class="nav-link active" aria-current="page" href="..">Accueil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="./recettealea">Recette Alea</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Recettes</a>
+                    <a class="nav-link" href="/recette?id_recette=1">Recettes</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         User
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="./connexion">Connexion</a></li>
+                    <ul class="dropdown-menu" th:if="${session.get('UID') == ''}">
+                        <li>
+                            <a class="dropdown-item" href="./connexion">Connexion</a>
+                        </li>
                         <li><a class="dropdown-item" href="./inscription">Inscription</a></li>
+                    </ul>
+                    <ul class="dropdown-menu" th:if="${session.get('UID') != ''}">
+                        <li>
+                            <a class="dropdown-item" href="./profil">Profil</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SpringBootSessionController {
 
-    @RequestMapping(value = "/addNote", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/addToSession", method = {RequestMethod.POST, RequestMethod.GET})
     public String addNote(@RequestParam("note") String note,
                           @Nullable @RequestParam("redirectPage") String redirect ,
                           @RequestParam("key") String sessionKey ,
@@ -25,20 +25,10 @@ public class SpringBootSessionController {
                             
         System.out.println(" defining "+ sessionKey +" : |" + note +"|");
 
-        @SuppressWarnings("unchecked")
-        List<String> notes = (List<String>) request.getSession().getAttribute("NOTES_SESSION");
-        if (notes == null) {
-            notes = new ArrayList<>();
-            // if notes object is not present in session, set notes in the request session
-            request.getSession().setAttribute(sessionKey, notes);
-        }
-        notes.add(note);
-        request.getSession().setAttribute(sessionKey, notes);
+        request.getSession().setAttribute(sessionKey, note);
 
         System.out.println("contenu de la session");
-        for (String _note: notes) {
-            System.out.println("item : |" + _note +"|");
-        }
+
         return "redirect:" + redirect;
     }
 

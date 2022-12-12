@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  ${head}
+<div th:insert="~{blocks/head.html}"></div>
 
-<body class="${background}">
+<body th:class="${background}">
 
-  ${header}
+<div th:insert="~{blocks/header.html}"></div>
 
   <div class="container text-center">
     <div class="row">
@@ -33,27 +33,27 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">person</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon2">person</span>
             <input type="text" class="form-control" name="duree" placeholder="Durée" aria-label="Prenom"
-              aria-describedby="basic-addon1">
+              aria-describedby="basic-addon2">
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon3">calendar_month</span>
             <input type="text" class="form-control" name="prix" placeholder="Prix" aria-label="Age"
-              aria-describedby="basic-addon1">
+              aria-describedby="basic-addon3">
           </div>
           
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon4">calendar_month</span>
             <textarea  class="form-control" name="ingredients" placeholder="Ingredients" rows="3" aria-label="Age"
-              aria-describedby="basic-addon1"></textarea>
+              aria-describedby="basic-addon4"></textarea>
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text material-symbols-outlined" id="basic-addon1">calendar_month</span>
+            <span class="input-group-text material-symbols-outlined" id="basic-addon5">calendar_month</span>
             <textarea  class="form-control" rows="3" name="prepa" placeholder="Etapes" aria-label="Age"
-              aria-describedby="basic-addon1"></textarea>
+              aria-describedby="basic-addon5"></textarea>
           </div>
 
           <div class="input-group mb-3">
@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  ${footer}
+  <div th:insert="~{blocks/footer.html}"></div>
 </body>
 
 </html>
