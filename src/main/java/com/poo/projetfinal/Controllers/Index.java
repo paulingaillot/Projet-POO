@@ -51,7 +51,7 @@ public class Index {
 			try {
 				System.out.print("Token : " + token);
 				User user = new User(token);
-				mav.addObject("recipesAffinity", getBestRecipes(user.getMail()));
+				mav.addObject("recipesAffinity", new ArrayList<>(getBestRecipes(user.getMail())));
 				mav.addObject("recettes", null);
 				mav.addObject("username", "Bonjour " + user.getPrenom());
 				mav.addObject("message", " ");
