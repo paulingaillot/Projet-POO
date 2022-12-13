@@ -12,37 +12,28 @@
 
 
   <div class="container text-center">
-      <div th:if="${recettes}">
-        <div th:each="recipe, iterStat : ${recettes}">
-
-        <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
-          <img th:src="${recipe.getImageRendered()}? ${recipe.getImageRendered()} : 'a' " class='card-img-top' alt='img' width=100px  >
-          <div class='card-body'>
-            <h5 class='card-title'><span th:text="${iterStat.index}"></span> | <span th:text="${recipe.getNom()}"></span> </h5>
-            <p><b>Durée :</b>  <span th:text="${recipe.getDuree()}"></span> min</p>
-            <p><b>Budget :</b> <span th:text="${recipe.getBudget()}"></span> €</p>
-            <a th:href="@{'/recette?id_recette=' + ${recipe.getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
-            </div>
-        </div>
-        <div class='col-sm-2'></div>
-
+    <div class="row">
+      <div th:if="${recettes}" th:each="recipe, iterStat : ${recettes}" class='card col-sm-3 text-bg-secondary mx-0-sm' style='width: 18rem'>
+        <img th:src="${recipe.getImageRendered()}? ${recipe.getImageRendered()} : 'a' " class='card-img-top' alt='img' width=100px  >
+        <div class='card-body'>
+          <h5 class='card-title'><span th:text="${iterStat.index + 1}"></span> | <span th:text="${recipe.getNom()}"></span> </h5>
+          <p><b>Durée :</b>  <span th:text="${recipe.getDuree()}"></span> min</p>
+          <p><b>Budget :</b> <span th:text="${recipe.getBudget()}"></span> €</p>
+          <a th:href="@{'/recette?id_recette=' + ${recipe.getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
+          </div>
+      </div>
+      <div th:if="${recipesAffinity} != null" th:each="recipesAff, iStat : ${recipesAffinity} " class='card col-sm-3 text-bg-secondary mx-0-sm' style='width: 18rem'>
+        <img th:src="${recipesAff.getRecipe()?.getImageRendered()}" class='card-img-top' alt='img' width=100px >
+        <div class='card-body'>
+          <h5 class='card-title'><span th:text="${iStat.index + 1}"></span>  | <span th:text="${recipesAff.getRecipe().getNom()}"></span> </h5>
+          <p><b>Durée :</b> <span th:text="${recipesAff.getRecipe().getDuree()}"></span> min</p>
+          <p><b>Budget :</b> <span th:text="${recipesAff.getRecipe().getBudget()}"></span> €</p>
+          <p><b>Recommandation :</b> <span th:text="${recipesAff.getScore()}"></span> %</p>
+          <a th:href="@{'/recette?id_recette=' + ${recipesAff.getRecipe().getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
         </div>
       </div>
-
-      <div th:if="${recipesAffinity} != null">
-        <div th:each="recipesAff, iStat : ${recipesAffinity} ">
-          <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
-          <img th:src="${recipesAff.getRecipe()?.getImageRendered()}" class='card-img-top' alt='img' width=100px >
-          <div class='card-body'>
-            recette content:
-            <h5 class='card-title'><span th:text="${iStat.count}"></span>  | <span th:text="${recipesAff.getRecipe().getNom()}"></span> </h5>
-            <p><b>Durée :</b> <span th:text="${recipesAff.getRecipe().getDuree()}"></span> min</p>
-            <p><b>Budget :</b> <span th:text="${recipesAff.getRecipe().getBudget()}"></span> €</p>
-            <p><b>Recommandation :</b> <span th:text="${recipesAff.getScore()}"></span> %</p>
-            <a th:href="@{'/recette?id_recette=' + ${recipesAff.getRecipe().getId()}}" class='stretched-link btn btn-dark'>Plus D'informations</a>
-            </div></div><div class='col-sm-2'></div>
-        </div>
-      </div>
+      <div class='col-sm-2'></div>
+    </div>
   </div>
 
   <div th:insert="~{blocks/footer.html}"></div>
