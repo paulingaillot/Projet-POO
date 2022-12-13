@@ -30,11 +30,10 @@
       </div>
 
       <div th:if="${recipesAffinity} != null">
-        <div th:each="recipesAff, iStat : ${recipesAffinity} ">
+        <div th:each="recipesAff, iStat : ${recipesAffinity} " >
           <div class='card col-sm-3 text-bg-secondary' style='width: 18rem'>
           <img th:src="${recipesAff.getRecipe()?.getImageRendered()}" class='card-img-top' alt='img' width=100px >
           <div class='card-body'>
-            recette content:
             <h5 class='card-title'><span th:text="${iStat.count}"></span>  | <span th:text="${recipesAff.getRecipe().getNom()}"></span> </h5>
             <p><b>Durée :</b> <span th:text="${recipesAff.getRecipe().getDuree()}"></span> min</p>
             <p><b>Budget :</b> <span th:text="${recipesAff.getRecipe().getBudget()}"></span> €</p>
