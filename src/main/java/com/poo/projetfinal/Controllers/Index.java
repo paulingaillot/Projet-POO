@@ -225,7 +225,7 @@ public class Index {
 			}
 
 			List<RecipeAffinity> sorted = map_unsorted.stream()
-					.sorted(Comparator.comparingInt(RecipeAffinity::getScore)).toList();
+							.sorted((r1,r2) -> r2.getScore() - r1.getScore()).toList();
 
 			for (RecipeAffinity ra: sorted) {
 				try {
@@ -240,7 +240,7 @@ public class Index {
 
 			}
 			ProjetfinalApplication.sql.close();
-
+			
 			return sorted;
 		} catch (SQLException e) {
 			e.printStackTrace();
