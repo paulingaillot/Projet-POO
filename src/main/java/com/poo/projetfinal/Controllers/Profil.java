@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadEmailException;
 import com.poo.projetfinal.Exceptions.BadUserException;
 import com.poo.projetfinal.Exceptions.EmptyFieldsException;
 import com.poo.projetfinal.Exceptions.NumberException;
+import com.poo.projetfinal.Model.User;
 
 @RestController
 public class Profil {

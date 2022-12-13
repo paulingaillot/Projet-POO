@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.poo.projetfinal.Model.Database;
+import com.poo.projetfinal.Model.WebSitePattern;
+
 @SpringBootApplication
 public class ProjetfinalApplication {
 

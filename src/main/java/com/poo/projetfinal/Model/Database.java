@@ -1,4 +1,4 @@
-package com.poo.projetfinal;
+package com.poo.projetfinal.Model;
 
 import java.io.File;
 import java.io.FileInputStream;

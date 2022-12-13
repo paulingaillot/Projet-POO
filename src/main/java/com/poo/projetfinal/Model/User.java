@@ -1,4 +1,4 @@
-package com.poo.projetfinal;
+package com.poo.projetfinal.Model;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Calendar;
 
+import com.poo.projetfinal.ProjetfinalApplication;
 import com.poo.projetfinal.Exceptions.BadPasswordException;
 import com.poo.projetfinal.Exceptions.BadUserException;
 

@@ -1,6 +1,5 @@
 package com.poo.projetfinal.Controllers;
 
-import com.poo.projetfinal.RecipeAffinity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,14 +9,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.poo.projetfinal.ProjetfinalApplication;
-import com.poo.projetfinal.Recette;
-import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadEmailException;
 import com.poo.projetfinal.Exceptions.BadFormatException;
 import com.poo.projetfinal.Exceptions.BadPasswordException;
 import com.poo.projetfinal.Exceptions.BadUserException;
 import com.poo.projetfinal.Exceptions.EmptyFieldsException;
 import com.poo.projetfinal.Exceptions.NumberException;
+import com.poo.projetfinal.Model.Recette;
+import com.poo.projetfinal.Model.RecipeAffinity;
+import com.poo.projetfinal.Model.User;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

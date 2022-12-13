@@ -22,12 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.poo.projetfinal.ProjetfinalApplication;
-import com.poo.projetfinal.Recette;
-import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadFormatException;
 import com.poo.projetfinal.Exceptions.BadUserException;
 import com.poo.projetfinal.Exceptions.EmptyFieldsException;
 import com.poo.projetfinal.Exceptions.NumberException;
+import com.poo.projetfinal.Model.Recette;
+import com.poo.projetfinal.Model.User;
 
 @RestController
 public class Admin {
