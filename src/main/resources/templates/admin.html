@@ -21,8 +21,8 @@
 
       </div>
       <div class="col-md-8 border p-4 px-5">
-        <div class="alert alert-warning ${ErrorMessageClassName}" role="alert">
-          ${ErrorMessage}
+        <div class="alert alert-warning" th:classappend="${ErrorMessageClassName}" role="alert">
+          <span th:text="${ErrorMessage}"></span>
         </div>
         <form action="./SubmitRecette" method="post" enctype="multipart/form-data">
 

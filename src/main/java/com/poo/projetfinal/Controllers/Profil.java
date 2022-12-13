@@ -2,7 +2,6 @@ package com.poo.projetfinal.Controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.poo.projetfinal.ProjetfinalApplication;
 import com.poo.projetfinal.User;
 import com.poo.projetfinal.Exceptions.BadEmailException;
 import com.poo.projetfinal.Exceptions.BadUserException;

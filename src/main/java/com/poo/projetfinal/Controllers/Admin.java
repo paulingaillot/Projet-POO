@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -36,11 +35,10 @@ public class Admin {
 	@GetMapping("/admin")
 	public ModelAndView profil(HttpServletRequest request, @Nullable @RequestParam("accr") String acronym) {
 
-		@SuppressWarnings("unchecked")
-		ArrayList<String> list = (ArrayList<String>) request.getSession().getAttribute("UID");
+		String token = (String) request.getSession().getAttribute("UID");
 
 		try {
-			User u = new User(list.get(0));
+			User u = new User(token);
 			if (!u.getMail().equals("admin@foodlovers.ca")) {
 				return new ModelAndView("error", HttpStatus.UNAUTHORIZED);
 			}
